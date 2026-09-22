@@ -1,5 +1,6 @@
 import { uid, clone } from './utils.js';
 import { parseControls } from './glsl.js';
+import { EXTRA_PRESETS } from './presets-extra.js';
 export const PALETTES = [
  { name:'오로라', colors:['#65fbd5','#ac76ff','#ffb86c'] },
  { name:'일몰', colors:['#ff543e','#ffc879','#a63cff'] },
@@ -175,6 +176,7 @@ vec3 pattern(vec2 p) {
   float diff=max(dot(n,light),0.0), rim=pow(1.0-max(dot(n,-rd),0.0),3.0);
   return palette(pos.y*.28+pos.x*.17)*(.18+.75*diff)+palette(.7)*rim*.4;
 }` },
+ ...EXTRA_PRESETS,
  { id:'starter', name:'Your first loop', ko:'나의 첫 루프', category:'code', description:'단 5줄의 함수로 시작하는 나만의 루프', palette:0,
  code:`// @slider uDensity 2 20 1 8 | 원의 밀도
 vec3 pattern(vec2 p) {
@@ -192,11 +194,11 @@ export function createLayer(id='prism') {
     params:Object.fromEntries(parseControls(p.code).map(c=>[c.name,c.value])) };
 }
 export function defaultProject() {
-  return { format:'loopfield-project', version:1, appVersion:'1.0.0', name:'무한의 궤도',
+  return { format:'loopfield-project', version:1, appVersion:'1.1.0', name:'무한의 궤도',
     layers:[createLayer('prism')],
     effects:{ glow:.35, exposure:1.15, contrast:1.08, vignette:.25, aberration:0 },
     background:'#080b12',
-    output:{ resolution:'1080p', aspect:'landscape', fps:30, duration:8, quality:'high', direct:true }
+    output:{ resolution:'1080p', aspect:'landscape', fps:30, duration:8, quality:'high', encoder:'auto', direct:true }
   };
 }
 export function duplicateLayer(layer) {

@@ -5,8 +5,9 @@ import { parseControls, buildFragment } from '../js/glsl.js';
 import { PRESETS, defaultProject, createLayer, duplicateLayer } from '../js/presets.js';
 import { validateProject } from '../js/project.js';
 
-test('all 12 presets use the injected GLSL API and valid control ranges',()=>{
-  assert.equal(PRESETS.length,12);
+test('all 32 presets use the injected GLSL API and valid control ranges',()=>{
+  assert.equal(PRESETS.length,32);
+  assert.equal(new Set(PRESETS.map(p=>p.id)).size,32);
   for(const p of PRESETS){const l=createLayer(p.id),c=buildFragment(l.source);assert.match(c.code,/#version 300 es/);assert.match(c.code,/#line 1/);assert.ok(c.controls.length<=16);for(const x of c.controls)assert.ok(l.params[x.name]>=x.min&&l.params[x.name]<=x.max);}
 });
 test('1080p / QHD / DCI 2K / UHD dimensions and portrait / square',()=>{

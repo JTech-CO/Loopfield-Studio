@@ -1,5 +1,5 @@
 /* Loopfield Studio - MIT. No network requests or executable project imports. */
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';
 export const MAX_LAYERS = 4;
 export const MAX_SOURCE = 48000;
 export const TAU = Math.PI * 2;

@@ -3,7 +3,7 @@ import { readLocalProject, saveLocalProject, validateProject } from './project.j
 import { Renderer, inspectLoop } from './renderer.js';
 import { CodeEditor } from './editor.js';
 import { parseControls } from './glsl.js';
-import { findAVCConfig, exportVideo, renderPNG } from './exporter.js';
+import { testEncoder, exportVideo, renderPNG } from './exporter.js';
 import { MAX_LAYERS, MAX_SOURCE, clone, clamp, mod, dimensions, bitrateFor, safeName, downloadBlob, formatBytes, sleep } from './utils.js';
 const $=s=>document.querySelector(s);
 const node=(tag,className='',text='')=>{const n=document.createElement(tag);n.className=className;if(text)n.textContent=text;return n;};
@@ -11,7 +11,7 @@ const icon=id=>{const svg=document.createElementNS('http://www.w3.org/2000/svg',
 const categoryName={geometry:'기하학',fractal:'프랙탈',organic:'유기적 패턴',volume:'3D 곡면',code:'코드 시작점'};
 let project=readLocalProject()||defaultProject();
 const state={selected:project.layers[0].id,phase:0,playing:!matchMedia('(prefers-reduced-motion: reduce)').matches,busy:false,dirty:true,revision:0,
-  mode:'design',previewSize:540,pendingAdd:false,lastClock:performance.now(),lastPaint:0,loop:null,codec:null,result:null,controller:null};
+  mode:'design',previewSize:540,pendingAdd:false,lastClock:performance.now(),lastPaint:0,loop:null,codec:null,result:null,controller:null,diagnostics:null};
 let renderer=null,saveTimer,toastTimer;
 const selected=()=>project.layers.find(l=>l.id===state.selected)||project.layers[0];
 function toast(message,type='info'){
@@ -51,7 +51,7 @@ function choosePreset(id){
   catch(e){toast(`패턴을 적용하지 못했습니다. ${e.message}`,'error');}
 }
 function renderLibrary(){
-  const search=$('#presetSearch').value.toLowerCase(),cat=$('#presetCategory').value;
+  const search=$('#presetSearch').value.toLowerCase(),cat=$('#presetCategory').dataset.value;
   const items=PRESETS.filter(p=>(cat==='all'||p.category===cat)&&`${p.name} ${p.ko} ${p.description}`.toLowerCase().includes(search));
   const frag=document.createDocumentFragment();
   for(const p of items){
@@ -119,7 +119,7 @@ function renderPalettes(){
 }
 function renderOutput(){
   const o=project.output;
-  for(const [id,key]of [['outputResolution','resolution'],['outputAspect','aspect'],['outputFPS','fps'],['outputDuration','duration'],['outputQuality','quality']])$('#'+id).value=o[key];
+  for(const [id,key]of [['outputResolution','resolution'],['outputAspect','aspect'],['outputFPS','fps'],['outputDuration','duration'],['outputQuality','quality'],['outputEncoder','encoder']])$('#'+id).value=o[key];
   $('#outputAspect').disabled=o.resolution==='dci2k';if(o.resolution==='dci2k')$('#outputAspect').value='landscape';
   const direct=typeof window.showSaveFilePicker==='function';$('#directSave').checked=o.direct&&direct;$('#directSave').disabled=!direct;
   $('#directSaveHint').textContent=direct?'파일을 조금씩 기록해 메모리 사용량을 줄입니다.':'이 브라우저는 직접 저장 미지원 · 다운로드로 저장합니다.';
@@ -128,6 +128,12 @@ function renderOutput(){
   $('#outputBitrate').textContent=`${(bitrate/1e6).toFixed(0)} Mbps`;$('#outputSize').textContent=`약 ${formatBytes(bytes)}`;
   const warning=$('#memoryWarning');warning.hidden=!(bytes>180e6&&!$('#directSave').checked);
   warning.textContent='예상 파일이 큽니다. 메모리 출력은 256 MiB에서 중단됩니다. 디스크 직접 저장, 더 짧은 길이, 낮은 압축 품질 중 하나를 사용하세요.';
+  $('#quickDimensions').textContent=`${w} × ${h}`;
+  document.querySelectorAll('#quickResolution button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.resolution===o.resolution)));
+  $('#snapshotResolution').value=o.resolution;$('#snapshotAspect').value=o.resolution==='dci2k'?'landscape':o.aspect;
+  $('#snapshotAspect').disabled=o.resolution==='dci2k';$('#snapshotDimensions').textContent=`${w} × ${h}`;
+  $('#previewShell').style.setProperty('--output-aspect',`${w} / ${h}`);
+  $('#previewShell').dataset.aspect=o.resolution==='dci2k'?'landscape':o.aspect;
   $('#endTime').textContent=`${o.duration}초`;$('#timelineSpec').textContent=`${o.duration}s / ${o.fps}fps`;updateTimeline();
 }
 function loadEditor(){
@@ -151,7 +157,7 @@ function compileCode(){
   }catch(e){$('#compileError').textContent=`적용하지 않았습니다. 마지막으로 정상 동작한 화면을 유지합니다.\n\n${e.message}`;$('#compileError').hidden=false;}
 }
 function setMode(mode){
-  state.mode=mode;$('#workspace').classList.toggle('code-mode',mode==='code');$('#editorPanel').hidden=mode!=='code';
+  state.mode=mode;document.body.classList.toggle('code-layout',mode==='code');$('#splitter').hidden=mode!=='code';closeInspector();closeLibrary();$('#stage').scrollTop=0;$('#workspace').classList.toggle('code-mode',mode==='code');$('#editorPanel').hidden=mode!=='code';
   $('#modeCode').classList.toggle('active',mode==='code');$('#modeDesign').classList.toggle('active',mode==='design');$('#modeCode').setAttribute('aria-pressed',String(mode==='code'));$('#modeDesign').setAttribute('aria-pressed',String(mode==='design'));
   requestAnimationFrame(fitPreview);
 }
@@ -161,13 +167,20 @@ function showTab(tab){
   if(!style)renderOutput();
 }
 function fitPreview(){
-  const [w,h]=dimensions(project.output),shell=$('#previewShell'),styles=getComputedStyle(shell);
-  const maxW=shell.clientWidth-parseFloat(styles.paddingLeft)-parseFloat(styles.paddingRight),maxH=shell.clientHeight-parseFloat(styles.paddingTop)-parseFloat(styles.paddingBottom);
+  const [w,h]=dimensions(project.output),shell=$('#previewShell');
+  // The shell follows the output aspect ratio; it is no longer a large empty flex box.
+  const maxW=shell.clientWidth,maxH=shell.clientHeight;
   const width=Math.max(1,Math.min(maxW,maxH*w/h)),height=width*h/w;
   $('#preview').style.width=`${width}px`;$('#preview').style.height=`${height}px`;
   if(renderer&&!renderer.lost){
-    const scale=state.previewSize/Math.min(w,h);const pw=Math.round(w*scale),ph=Math.round(h*scale);
-    try{renderer.resize(pw,ph);$('#previewInfo').textContent=`${pw} × ${ph}`;state.dirty=true;}catch(e){graphicsFailure(e);}
+    const scale=state.previewSize/Math.min(w,h),pw=Math.round(w*scale),ph=Math.round(h*scale);
+    try{renderer.resize(pw,ph);$('#previewInfo').textContent=`${pw} × ${ph}`;state.dirty=true;}
+    catch(e){
+      // A too-large preview must not disable a separate, possibly usable export path.
+      if(state.previewSize>540&&!renderer.gl.isContextLost()){
+        state.previewSize=540;$('#previewQuality').value='540';toast(`고해상도 미리보기를 만들지 못해 540p로 복구했습니다. 저장 해상도는 유지됩니다. ${e.message}`,'warning');fitPreview();
+      }else graphicsFailure(e);
+    }
   }
 }
 function updateTimeline(){
@@ -191,7 +204,36 @@ function tick(now){
 function openLibrary(){
   $('#library').classList.add('is-open');$('#libraryToggle').setAttribute('aria-expanded','true');
 }
-function closeLibrary(){$('#library').classList.remove('is-open');$('#libraryToggle').setAttribute('aria-expanded','false');}
+function closeLibrary(){closeCategory();$('#library').classList.remove('is-open');$('#libraryToggle').setAttribute('aria-expanded','false');}
+function openInspector(){closeLibrary();$('#inspector').classList.add('is-open');$('#inspectorToggle').setAttribute('aria-expanded','true');}
+function closeInspector(){$('#inspector').classList.remove('is-open');$('#inspectorToggle').setAttribute('aria-expanded','false');}
+function closeCategory(focus=false){$('#categoryMenu').hidden=true;$('#presetCategory').setAttribute('aria-expanded','false');if(focus)$('#presetCategory').focus();}
+function buildCategories(){
+  const menu=$('#categoryMenu');menu.replaceChildren();
+  for(const [id,label] of [['all','모든 패턴'],...Object.entries(categoryName)]){
+    const b=node('button','category-option');b.type='button';b.dataset.category=id;b.setAttribute('role','option');
+    b.setAttribute('aria-selected',String(id===$('#presetCategory').dataset.value));b.tabIndex=-1;
+    b.append(node('span','',label),node('small','',String(id==='all'?PRESETS.length:PRESETS.filter(p=>p.category===id).length)));
+    b.addEventListener('click',()=>{ $('#presetCategory').dataset.value=id;$('#categoryLabel').textContent=label;buildCategories();renderLibrary();closeCategory(true); });
+    menu.append(b);
+  }
+}
+function openCategory(last=false){
+  buildCategories();$('#categoryMenu').hidden=false;$('#presetCategory').setAttribute('aria-expanded','true');
+  const options=[...$('#categoryMenu').children],active=options.find(b=>b.getAttribute('aria-selected')==='true');
+  (last?options.at(-1):active||options[0])?.focus();
+}
+function updateOutputSetting(key,value){
+  if(key==='fps')value=Number(value);if(key==='duration')value=Math.round(clamp(Number(value)||8,2,60));
+  project.output[key]=value;state.codec=null;state.diagnostics=null;$('#codecDiagnostics').hidden=true;
+  $('#codecStatus').textContent='출력 설정이 바뀌었습니다. 실제 1프레임 검사를 실행할 수 있습니다.';
+  renderOutput();fitPreview();changed();
+}
+function saveDiagnostics(){
+  const data=state.diagnostics||state.result?.diagnostics||[];
+  downloadBlob(new Blob([JSON.stringify({app:'Loopfield Studio 1.1.0',at:new Date().toISOString(),settings:project.output,secureContext:isSecureContext,
+    videoEncoder:typeof VideoEncoder,userAgent:navigator.userAgent,gpuRenderLimit:renderer?.limit,attempts:data},null,2)],{type:'application/json'}),'Loopfield-encoder-diagnostics.json');
+}
 function saveProject(){
   downloadBlob(new Blob([JSON.stringify(project,null,2)],{type:'application/json'}),`${safeName(project.name)}.loopfield.json`);
   toast('프로젝트 JSON에 레이어, 설정, GLSL을 저장했습니다.');
@@ -225,7 +267,7 @@ async function showLoop(){
 function exportDialogReset(){
   if(state.result?.url)URL.revokeObjectURL(state.result.url);state.result=null;
   const video=$('#resultVideo');video.pause();video.removeAttribute('src');video.load();video.hidden=true;
-  $('#exportProgressArea').hidden=false;$('#exportResult').hidden=true;$('#downloadVideo').hidden=true;$('#closeExport').hidden=true;$('#cancelExport').hidden=false;$('#cancelExport').disabled=false;
+  $('#exportProgressArea').hidden=false;$('#exportResult').hidden=true;$('#downloadVideo').hidden=true;$('#closeExport').hidden=true;$('#cancelExport').hidden=false;$('#exportDiagnostics').hidden=true;$('#cancelExport').disabled=false;
   $('#cancelExport').textContent='렌더링 취소';$('#exportTitle').textContent='루프를 렌더링하고 있습니다.';$('#exportProgress').value=0;$('#exportPercent').textContent='0%';$('#exportFrameCount').textContent='지원 확인 중';
   $('#exportMessage').textContent='탭을 닫거나 기기를 절전 모드로 전환하지 마세요. 다른 탭으로 이동하면 렌더링이 느려질 수 있습니다.';
 }
@@ -240,30 +282,30 @@ async function renderVideo(){
     // Must be invoked inside the user's click activation, before any encoder probe awaits.
     if(direct)handle=await window.showSaveFilePicker({suggestedName:filename,types:[{description:'H.264 MP4 영상',accept:{'video/mp4':['.mp4']}}],excludeAcceptAllOption:true});
     state.busy=true;state.controller=new AbortController();exportDialogReset();$('#exportDialog').showModal();
-    const config=await findAVCConfig(snapshot.output);
     const report=await computeLoop();
     if(state.controller.signal.aborted)throw new DOMException('렌더링을 취소했습니다.','AbortError');
     if(!report.match&&!confirm(`루프 끝점 평균 차이가 ${report.mae.toFixed(2)}/255입니다. 이어지는 부분이 튈 수 있습니다. 그래도 MP4를 만들까요?`))throw new DOMException('루프 확인 후 출력을 취소했습니다.','AbortError');
     if(handle)writable=await handle.createWritable();
-    const result=await exportVideo(snapshot,{signal:state.controller.signal,writable,config,onProgress:p=>{
+    const result=await exportVideo(snapshot,{signal:state.controller.signal,writable,onProgress:p=>{
       $('#exportProgress').value=p.percent;$('#exportPercent').textContent=`${Math.floor(p.percent*100)}%`;
       $('#exportFrameCount').textContent=`${p.frame.toLocaleString()} / ${p.total.toLocaleString()} 프레임`;
       if(p.stage==='finalize')$('#exportTitle').textContent='MP4 파일을 마무리하고 있습니다.';
-      $('#exportMessage').textContent=`${w} × ${h} · ${snapshot.output.fps}fps · ${p.codec}\n경과 ${p.elapsed.toFixed(1)}초 · 인코딩 데이터 ${formatBytes(p.bytes)}`;
+      $('#exportMessage').textContent=`${w} × ${h} · ${snapshot.output.fps}fps · ${p.codec}\n${p.message||`경과 ${p.elapsed.toFixed(1)}초 · 인코딩 데이터 ${formatBytes(p.bytes)}`}`;
     }});
-    writable=null;state.result={...result,filename,url:result.blob?URL.createObjectURL(result.blob):null};
+    writable=null;state.diagnostics=result.diagnostics;$('#codecDiagnostics').hidden=false;state.result={...result,filename,url:result.blob?URL.createObjectURL(result.blob):null};
     $('#exportTitle').textContent='당신의 루프가 완성되었습니다.';$('#exportProgressArea').hidden=true;$('#exportResult').hidden=false;
     $('#exportResult').textContent=`${result.width} × ${result.height} · ${result.fps}fps · ${snapshot.output.duration}초 · ${result.frames}프레임\n${formatBytes(result.bytes)} · ${result.codec}\n${result.blob?'아래 버튼을 눌러 MP4 파일을 저장하세요.':'선택한 파일에 MP4 저장을 완료했습니다.'}`;
     $('#exportResult').style.whiteSpace='pre-line';
     if(result.blob){$('#resultVideo').src=state.result.url;$('#resultVideo').hidden=false;$('#downloadVideo').hidden=false;}
   }catch(e){
+    state.diagnostics=e.diagnostics||[];$('#codecDiagnostics').hidden=false;
     if(writable)try{await writable.abort();}catch{}
     if(!$('#exportDialog').open){if(e.name!=='AbortError')toast(e.message,'error');return;}
     $('#exportTitle').textContent=e.name==='AbortError'?'렌더링을 취소했습니다.':'출력 설정을 확인해 주세요.';
     $('#exportProgressArea').hidden=true;$('#exportResult').hidden=false;$('#exportResult').textContent=e.name==='AbortError'?'미완성 영상을 다운로드하지 않습니다. 프로젝트는 그대로 유지됩니다.':e.message;
   }finally{
     state.busy=false;state.controller=null;state.lastClock=performance.now();state.dirty=true;
-    if($('#exportDialog').open){$('#cancelExport').hidden=true;$('#closeExport').hidden=false;$('#closeExport').focus();}
+    if($('#exportDialog').open){$('#exportDiagnostics').hidden=false;$('#cancelExport').hidden=true;$('#closeExport').hidden=false;$('#closeExport').focus();}
   }
 }
 
@@ -284,8 +326,25 @@ $('#newProject').addEventListener('click',()=>{if(confirm('새 프로젝트를 �
 $('#modeDesign').addEventListener('click',()=>setMode('design'));$('#modeCode').addEventListener('click',()=>setMode('code'));$('#openCodeHint').addEventListener('click',()=>setMode('code'));
 $('#styleTab').addEventListener('click',()=>showTab('style'));$('#exportTab').addEventListener('click',()=>showTab('export'));
 $('.inspector-tabs').addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();const next=$('#styleTab').getAttribute('aria-selected')==='true'?'export':'style';showTab(next);$('#'+next+'Tab').focus();}});
-$('#openExport').addEventListener('click',()=>{showTab('export');if(matchMedia('(max-width:760px)').matches)$('#inspector').scrollIntoView({behavior:'smooth',block:'start'});});
-$('#presetSearch').addEventListener('input',renderLibrary);$('#presetCategory').addEventListener('change',renderLibrary);
+$('#openExport').addEventListener('click',()=>{showTab('export');if(state.mode==='code')openInspector();if(matchMedia('(max-width:760px)').matches)$('#inspector').scrollIntoView({behavior:'smooth',block:'start'});});
+$('#presetSearch').addEventListener('input',renderLibrary);
+$('#presetCategory').addEventListener('click',()=>$('#categoryMenu').hidden?openCategory():closeCategory());
+$('#presetCategory').addEventListener('keydown',e=>{if(['ArrowDown','ArrowUp'].includes(e.key)){e.preventDefault();openCategory(e.key==='ArrowUp');}});
+$('#categoryMenu').addEventListener('keydown',e=>{
+  const options=[...e.currentTarget.children],index=options.indexOf(document.activeElement);
+  if(e.code==='Space'){e.preventDefault();e.stopPropagation();options[index]?.click();return;}
+  if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();const next=e.key==='Home'?0:e.key==='End'?options.length-1:(index+(e.key==='ArrowDown'?1:-1)+options.length)%options.length;options[next].focus();}
+  if(e.key==='Escape'){e.preventDefault();e.stopPropagation();closeCategory(true);}if(e.key==='Tab')closeCategory();
+});
+document.addEventListener('pointerdown',e=>{if(!$('#categoryPicker').contains(e.target))closeCategory();});
+$('#categoryPicker').addEventListener('focusout',()=>setTimeout(()=>{if(!$('#categoryPicker').contains(document.activeElement))closeCategory();},0));
+$('#inspectorToggle').addEventListener('click',()=>$('#inspector').classList.contains('is-open')?closeInspector():openInspector());
+$('#closeInspector').addEventListener('click',closeInspector);
+$('#codecDiagnostics').addEventListener('click',saveDiagnostics);
+$('#exportDiagnostics').addEventListener('click',saveDiagnostics);
+$('#quickResolution').addEventListener('click',e=>{const b=e.target.closest('button[data-resolution]');if(b)updateOutputSetting('resolution',b.dataset.resolution);});
+$('#snapshotResolution').addEventListener('change',e=>updateOutputSetting('resolution',e.target.value));
+$('#snapshotAspect').addEventListener('change',e=>updateOutputSetting('aspect',e.target.value));
 $('#libraryToggle').addEventListener('click',()=>$('#library').classList.contains('is-open')?closeLibrary():openLibrary());$('#closeLibrary').addEventListener('click',closeLibrary);
 $('#addLayer').addEventListener('click',()=>{state.pendingAdd=true;$('.library-intro').textContent='추가할 레이어의 패턴을 고르세요.';openLibrary();renderLibrary();toast('왼쪽 목록에서 추가할 패턴을 고르세요.');});
 $('#duplicateLayer').addEventListener('click',()=>{
@@ -306,19 +365,29 @@ $('#scrub').addEventListener('input',e=>{state.phase=Math.min(.999999,Number(e.t
 $('#previewQuality').addEventListener('change',e=>{state.previewSize=Number(e.target.value);fitPreview();});
 $('#resetView').addEventListener('click',()=>{Object.assign(selected(),{zoom:1,rotation:0,offset:[0,0]});renderInspector();changed();});
 $('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('#previewShell').requestFullscreen();}catch{toast('이 브라우저에서는 전체 화면 요청이 허용되지 않았습니다.','warning');}});
-$('#snapshot').addEventListener('click',async()=>{
-  if(state.busy)return;try{assertReady();state.busy=true;$('#snapshot').disabled=true;const blob=await renderPNG(clone(project),state.phase);const [w,h]=dimensions(project.output);downloadBlob(blob,`${safeName(project.name)}-${w}x${h}.png`);toast(`${w} × ${h} PNG를 생성했습니다.`);}catch(e){toast(e.message,'error');}finally{state.busy=false;$('#snapshot').disabled=!renderer||renderer.lost;state.lastClock=performance.now();}
+$('#snapshot').addEventListener('click',()=>{
+  if(state.busy)return;renderOutput();$('#snapshotMessage').textContent='현재 재생 위치의 한 프레임을 저장합니다.';$('#snapshotDialog').showModal();
 });
-for(const [id,key]of [['outputResolution','resolution'],['outputAspect','aspect'],['outputFPS','fps'],['outputDuration','duration'],['outputQuality','quality']])$('#'+id).addEventListener('change',e=>{
-  let value=e.target.value;
-  if(key==='fps')value=Number(value);if(key==='duration')value=Math.round(clamp(Number(value)||8,2,60));
-  project.output[key]=value;state.codec=null;$('#codecStatus').textContent='출력 설정이 바뀌었습니다. 지원 여부를 다시 확인하세요.';
-  renderOutput();fitPreview();changed();
+$('#confirmSnapshot').addEventListener('click',async()=>{
+  if(state.busy)return;
+  try{assertReady();state.busy=true;$('#confirmSnapshot').disabled=true;$('#snapshotMessage').textContent='선택 해상도로 렌더링 중…';
+    const snapshot=clone(project),blob=await renderPNG(snapshot,state.phase),[w,h]=dimensions(snapshot.output);
+    downloadBlob(blob,`${safeName(snapshot.name)}-${w}x${h}.png`);$('#snapshotDialog').close();toast(`${w} × ${h} PNG를 생성했습니다.`);
+  }catch(e){$('#snapshotMessage').textContent=e.message;toast(e.message,'error');}
+  finally{state.busy=false;$('#confirmSnapshot').disabled=false;state.lastClock=performance.now();}
 });
+for(const [id,key]of [['outputResolution','resolution'],['outputAspect','aspect'],['outputFPS','fps'],['outputDuration','duration'],['outputQuality','quality'],['outputEncoder','encoder']])$('#'+id).addEventListener('change',e=>updateOutputSetting(key,e.target.value));
 $('#directSave').addEventListener('change',e=>{project.output.direct=e.target.checked;renderOutput();changed();});
 $('#checkCodec').addEventListener('click',async()=>{
-  const button=$('#checkCodec');button.disabled=true;$('#codecStatus').textContent='선택한 크기와 FPS로 확인 중…';
-  try{const config=await findAVCConfig(project.output);state.codec=config;$('#codecStatus').textContent=`설정 조회 통과 · ${config.codec}. 실제 출력 성공은 인코딩 시작 시 확인합니다.`;}catch(e){$('#codecStatus').textContent=e.message;}finally{button.disabled=false;}
+  if(state.busy){if(state.probing)state.controller?.abort();return;}const button=$('#checkCodec'),snapshot=clone(project),key=JSON.stringify(snapshot.output);state.busy=true;state.probing=true;state.controller=new AbortController();button.textContent='검사 취소';
+  $('#codecStatus').textContent='선택 크기로 렌더링 후 실제 H.264 압축을 검사합니다…';
+  try{
+    assertReady();const result=await testEncoder(snapshot,{signal:state.controller.signal,onAttempt:a=>{if(JSON.stringify(project.output)===key)$('#codecStatus').textContent=`실제 1프레임 검사 ${a.attempt} · ${a.codec} · ${a.preference} · ${a.input}`;}});
+    if(JSON.stringify(project.output)!==key)return;
+    state.codec=result.config;state.diagnostics=result.diagnostics;$('#codecDiagnostics').hidden=false;
+    $('#codecStatus').textContent=`실제 1프레임 통과 · ${result.config.width} × ${result.config.height} · ${result.config.codec} · ${result.input==='canvas'?'캔버스':'CPU RGBA'} 전달. 전체 영상 성공까지 보장하는 검사는 아닙니다.`;
+  }catch(e){if(JSON.stringify(project.output)===key){state.diagnostics=e.diagnostics||[];$('#codecDiagnostics').hidden=false;$('#codecStatus').textContent=e.name==='AbortError'?'인코더 검사를 취소했습니다.':e.message;}}
+  finally{button.disabled=false;button.textContent='실제 1프레임 출력 검사';state.busy=false;state.probing=false;state.controller=null;state.lastClock=performance.now();}
 });
 $('#renderVideo').addEventListener('click',renderVideo);$('#downloadVideo').addEventListener('click',()=>{if(state.result?.blob)downloadBlob(state.result.blob,state.result.filename);});
 $('#cancelExport').addEventListener('click',()=>{state.controller?.abort();$('#cancelExport').disabled=true;$('#cancelExport').textContent='진행 중인 프레임을 정리하고 있습니다…';});
@@ -341,14 +410,22 @@ window.addEventListener('keydown',e=>{
   const input=/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName),modal=document.querySelector('dialog[open]');
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();if(!state.busy)saveProject();return;}
   if((e.ctrlKey||e.metaKey)&&e.key==='Enter'&&state.mode==='code'&&!state.busy&&!modal){e.preventDefault();compileCode();return;}
-  if(e.code==='Space'&&!input&&!modal&&!state.busy){e.preventDefault();togglePlay();}
-  if(e.key==='Escape'&&!modal)closeLibrary();
+  if(e.code==='Space'&&!input&&e.target.tagName!=='BUTTON'&&!modal&&!state.busy){e.preventDefault();togglePlay();}
+  if(e.key==='Escape'&&!modal){closeLibrary();closeInspector();}
 });
 window.addEventListener('beforeunload',e=>{
   if(state.busy){e.preventDefault();e.returnValue='';}
   try{saveLocalProject(project);}catch{}
 });
 document.addEventListener('visibilitychange',()=>state.lastClock=performance.now());
+// Resizable, keyboard-accessible split. Only layout preference is stored separately.
+let splitting=false;
+function setSplit(value){const v=clamp(value,30,70);$('#stage').style.setProperty('--preview-share',`${v}%`);$('#splitter').setAttribute('aria-valuenow',String(Math.round(v)));try{localStorage.setItem('loopfield.split.v1',String(v));}catch{}}
+try{const saved=Number(localStorage.getItem('loopfield.split.v1'));setSplit(saved>=30&&saved<=70?saved:56);}catch{setSplit(56);}
+$('#splitter').addEventListener('pointerdown',e=>{if(e.button!==0)return;splitting=true;e.currentTarget.setPointerCapture(e.pointerId);document.body.classList.add('is-resizing');});
+$('#splitter').addEventListener('pointermove',e=>{if(!splitting)return;const rect=$('#stage').getBoundingClientRect(),style=getComputedStyle($('#stage')),pad=parseFloat(style.paddingLeft);setSplit((e.clientX-rect.left-pad)/(rect.width-pad-parseFloat(style.paddingRight))*100);});
+for(const type of ['pointerup','pointercancel','lostpointercapture'])$('#splitter').addEventListener(type,()=>{splitting=false;document.body.classList.remove('is-resizing');});
+$('#splitter').addEventListener('keydown',e=>{const v=Number(e.currentTarget.getAttribute('aria-valuenow'));if(['ArrowLeft','ArrowRight','Home'].includes(e.key)){e.preventDefault();setSplit(e.key==='Home'?56:v+(e.key==='ArrowLeft'?-2:2));}});
 new ResizeObserver(()=>fitPreview()).observe($('#previewShell'));
 function start(){
   try{

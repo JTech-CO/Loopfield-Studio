@@ -1,0 +1,308 @@
+[
+  {
+    "name": "WebGL boot",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "32 presets in library",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Normal preview fills its shell",
+    "pass": true,
+    "detail": {
+      "preview": {
+        "x": 277.671875,
+        "y": 161.4375,
+        "width": 954.65625,
+        "height": 537,
+        "top": 161.4375,
+        "right": 1232.328125,
+        "bottom": 698.4375,
+        "left": 277.671875
+      },
+      "previewShell": {
+        "x": 276,
+        "y": 160.5,
+        "width": 958,
+        "height": 538.875,
+        "top": 160.5,
+        "right": 1234,
+        "bottom": 699.375,
+        "left": 276
+      },
+      "previewColumn": {
+        "x": 276,
+        "y": 88,
+        "width": 958,
+        "height": 955.140625,
+        "top": 88,
+        "right": 1234,
+        "bottom": 1043.140625,
+        "left": 276
+      },
+      "editorPanel": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "splitter": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0,
+        "left": 0
+      },
+      "stage": {
+        "x": 250,
+        "y": 66,
+        "width": 1016,
+        "height": 906,
+        "top": 66,
+        "right": 1266,
+        "bottom": 972,
+        "left": 250
+      }
+    }
+  },
+  {
+    "name": "Category listbox visible",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Category colors explicitly dark/light",
+    "pass": true,
+    "detail": {
+      "bg": "rgb(32, 38, 48)",
+      "fg": "rgb(242, 243, 245)"
+    }
+  },
+  {
+    "name": "Fractal filter includes six presets",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Category keyboard selection",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Korean search finds Newton",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "New preset applied",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Code preview LEFT and editor RIGHT",
+    "pass": true,
+    "detail": {
+      "preview": {
+        "x": 28,
+        "y": 155.609375,
+        "width": 840.875,
+        "height": 473,
+        "top": 155.609375,
+        "right": 868.875,
+        "bottom": 628.609375,
+        "left": 28
+      },
+      "previewShell": {
+        "x": 26,
+        "y": 154.5,
+        "width": 844.875,
+        "height": 475.234375,
+        "top": 154.5,
+        "right": 870.875,
+        "bottom": 629.734375,
+        "left": 26
+      },
+      "previewColumn": {
+        "x": 26,
+        "y": 90,
+        "width": 866.875,
+        "height": 858,
+        "top": 90,
+        "right": 892.875,
+        "bottom": 948,
+        "left": 26
+      },
+      "editorPanel": {
+        "x": 914.875,
+        "y": 90,
+        "width": 659.125,
+        "height": 858,
+        "top": 90,
+        "right": 1574,
+        "bottom": 948,
+        "left": 914.875
+      },
+      "splitter": {
+        "x": 892.875,
+        "y": 90,
+        "width": 8,
+        "height": 858,
+        "top": 90,
+        "right": 900.875,
+        "bottom": 948,
+        "left": 892.875
+      },
+      "stage": {
+        "x": 0,
+        "y": 66,
+        "width": 1600,
+        "height": 906,
+        "top": 66,
+        "right": 1600,
+        "bottom": 972,
+        "left": 0
+      }
+    }
+  },
+  {
+    "name": "Code editor uses full available height",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Keyboard split width",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Pointer split width",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Code style drawer opens",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Code style drawer closes",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Quick 4K updates output selector",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Quick 4K labels 3840x2160",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Export drawer reveals 4K setting",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Insecure-origin native check fails explicitly",
+    "pass": true,
+    "detail": "MP4 출력은 HTTPS 또는 localhost에서 열어야 합니다. GitHub Pages HTTPS 주소를 사용하세요."
+  },
+  {
+    "name": "Native failure preserves UHD setting",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "PNG dialog exposes same 4K setting",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "PNG DCI2K selection synchronizes MP4 output",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "UI PNG download has real 3840x2160 pixels",
+    "pass": true,
+    "detail": {
+      "size": [
+        3840,
+        2160
+      ],
+      "bytes": 6041269
+    }
+  },
+  {
+    "name": "Portrait frame keeps 9:16 aspect",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Square frame remains square",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Bad GLSL stays a failed draft",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "GLSL draft revert restores original source",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Code page has no horizontal overflow at 1024px",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Tablet horizontal split at 1024px",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Code page has no horizontal overflow at 768px",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Tablet horizontal split at 768px",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Code page has no horizontal overflow at 390px",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Phone uses readable stacked panes",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "Mobile normal page has no horizontal overflow",
+    "pass": true,
+    "detail": null
+  },
+  {
+    "name": "No uncaught application exceptions",
+    "pass": true,
+    "detail": []
+  }
+]

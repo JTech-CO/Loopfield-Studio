@@ -1,0 +1,254 @@
+[
+  {
+    "input": "canvas",
+    "width": 3840,
+    "height": 2160,
+    "frames": [
+      {
+        "timestamp": 0,
+        "duration": 41667,
+        "pixel": 0,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 41667,
+        "duration": 41666,
+        "pixel": 21,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 83333,
+        "duration": 41667,
+        "pixel": 42,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 125000,
+        "duration": 41667,
+        "pixel": 64,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 166667,
+        "duration": 41666,
+        "pixel": 85,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 208333,
+        "duration": 41667,
+        "pixel": 106,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 250000,
+        "duration": 41667,
+        "pixel": 128,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 291667,
+        "duration": 41666,
+        "pixel": 149,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 333333,
+        "duration": 41667,
+        "pixel": 170,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 375000,
+        "duration": 41667,
+        "pixel": 191,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 416667,
+        "duration": 41666,
+        "pixel": 212,
+        "input": "canvas",
+        "closed": true
+      },
+      {
+        "timestamp": 458333,
+        "duration": 41667,
+        "pixel": 234,
+        "input": "canvas",
+        "closed": true
+      }
+    ],
+    "progress": [
+      {
+        "stage": "probe",
+        "frame": 0,
+        "percent": 0
+      },
+      {
+        "stage": "render",
+        "frame": 1,
+        "percent": 0.08333333333333333
+      },
+      {
+        "stage": "render",
+        "frame": 4,
+        "percent": 0.3333333333333333
+      },
+      {
+        "stage": "render",
+        "frame": 8,
+        "percent": 0.6666666666666666
+      },
+      {
+        "stage": "finalize",
+        "frame": 12,
+        "percent": 1
+      }
+    ],
+    "encoders": 1,
+    "pass": true,
+    "nativeEncoder": false
+  },
+  {
+    "input": "rgba",
+    "width": 3840,
+    "height": 2160,
+    "frames": [
+      {
+        "timestamp": 0,
+        "duration": 41667,
+        "pixel": 0,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 41667,
+        "duration": 41666,
+        "pixel": 21,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 83333,
+        "duration": 41667,
+        "pixel": 42,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 125000,
+        "duration": 41667,
+        "pixel": 64,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 166667,
+        "duration": 41666,
+        "pixel": 85,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 208333,
+        "duration": 41667,
+        "pixel": 106,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 250000,
+        "duration": 41667,
+        "pixel": 128,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 291667,
+        "duration": 41666,
+        "pixel": 149,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 333333,
+        "duration": 41667,
+        "pixel": 170,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 375000,
+        "duration": 41667,
+        "pixel": 191,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 416667,
+        "duration": 41666,
+        "pixel": 212,
+        "input": "rgba",
+        "closed": true
+      },
+      {
+        "timestamp": 458333,
+        "duration": 41667,
+        "pixel": 234,
+        "input": "rgba",
+        "closed": true
+      }
+    ],
+    "progress": [
+      {
+        "stage": "probe",
+        "frame": 0,
+        "percent": 0
+      },
+      {
+        "stage": "probe",
+        "frame": 0,
+        "percent": 0
+      },
+      {
+        "stage": "render",
+        "frame": 1,
+        "percent": 0.08333333333333333
+      },
+      {
+        "stage": "render",
+        "frame": 4,
+        "percent": 0.3333333333333333
+      },
+      {
+        "stage": "render",
+        "frame": 8,
+        "percent": 0.6666666666666666
+      },
+      {
+        "stage": "finalize",
+        "frame": 12,
+        "percent": 1
+      }
+    ],
+    "encoders": 2,
+    "pass": true,
+    "nativeEncoder": false
+  },
+  {
+    "cancel": true,
+    "pass": true,
+    "nativeEncoder": false
+  }
+]

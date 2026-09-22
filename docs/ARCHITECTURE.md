@@ -1,4 +1,4 @@
-# 아키텍처 / v1.0.0
+# 아키텍처 / v1.1.0
 
 ## 경계
 
@@ -6,7 +6,15 @@
 
 ## 모듈
 
-app.js는 화면 상태와 이벤트, editor.js는 텍스트 편집·강조, project.js는 저장 및 검증을 담당한다. presets.js는 자체 GLSL 소스와 초기값, glsl.js는 공통 API와 컴파일 wrapper를 제공한다. renderer.js는 GPU 타깃과 합성, exporter.js는 프레임 생성·WebCodecs·취소, mp4.js는 AVC 한 트랙용 ISO BMFF writer이다. utils.js에 순수 계산과 저장 헬퍼를 모았다.
+app.js는 화면 상태와 이벤트, editor.js는 텍스트 편집·강조, project.js는 저장 및 검증을 담당한다. presets.js와 presets-extra.js는 32개 자체 GLSL 소스와 초기값, glsl.js는 공통 API와 컴파일 wrapper를 제공한다. renderer.js는 GPU 타깃과 합성, avc.js는 AVC 프로필/레벨 후보와 지원 조회, exporter.js는 첫 프레임 검증·프레임 생성·WebCodecs·취소, mp4.js는 AVC 한 트랙용 ISO BMFF writer이다. utils.js에 순수 계산과 저장 헬퍼를 모았다.
+
+## 화면 구조
+
+일반 모드는 라이브러리 / 프리뷰 / 설정의 세 영역이다. 프리뷰는 남는 높이를 늘리는 flex 박스가 아니라 출력 aspect-ratio를 따르는 박스다. canvas는 이 영역을 contain으로 채우므로 자르거나 비율을 왜곡하지 않는다.
+
+코드 모드는 라이브러리와 설정을 서랍으로 전환하고 가운데 stage를 preview / separator / editor의 CSS grid로 만든다. 분할 비율은 30~70%, 기본 56%이며 별도 localStorage 키에 보관한다. 작은 스마트폰만 세로로 쌓는다. 미리보기 품질은 UI state, 출력 크기는 project.output이다. 빠른 해상도 버튼, 영상 출력 설정, PNG 대화상자는 같은 project.output을 읽고 쓴다.
+
+패턴 분류는 HTML listbox 버튼이며 OS의 native option 색에 의존하지 않는다. 다른 select에는 배경색/글자색/color-scheme을 명시한다. 프리셋 썸네일은 실제 GLSL 렌더에서 생성한 로컬 WebP이다.
 
 ## GPU 파이프라인
 
@@ -24,7 +32,11 @@ app.js는 화면 상태와 이벤트, editor.js는 텍스트 편집·강조, pro
 
 ## H.264 / MP4
 
-VideoEncoder.isConfigSupported에 **출력과 동일한 크기·FPS·목표 비트레이트**를 넣는다. AVC High/Main/Baseline 프로파일과 수준 후보를 조회한다. `hardwareAcceleration: prefer-hardware`는 요청 힌트일 뿐 실제 GPU 사용을 확인하는 값이 아니다. 초기 실제 프레임 flush에서도 실패할 수 있다. 이때 명시적으로 오류를 반환한다.
+VideoEncoder.isConfigSupported에 **출력과 동일한 크기·FPS·목표 비트레이트**를 넣는다. 가로/세로를 각각 16픽셀 매크로블록으로 올림한 뒤 MaxFS, MaxMBPS, 치수 제약과 프로필별 MaxBR로 AVC High/Main/Baseline 후보를 만든다. DCI 2K/30은 적어도 4.2, QHD/30은 5.0, UHD/30은 5.1, UHD/60은 5.2가 필요하며 비트레이트가 더 높은 레벨을 요구할 수도 있다. 모든 2K를 무조건 5.1로 요청하지 않는다.
+
+조회가 통과해도 실제 인코더 초기화는 실패할 수 있다. 후보마다 새 인코더로 정확한 출력 크기의 프레임 0을 encode/flush한다. 실패하면 canvas 대신 readPixels의 행을 뒤집은 top-down RGBA VideoFrame을 시도하고, 다른 프로필/레벨/하드웨어 선호 경로도 탐색한다. 최초 성공 청크는 메모리에 보류한 뒤 MP4 writer를 열어 커밋한다. 이후 루프는 프레임 1부터 시작하므로 첫 프레임이 중복되지 않는다. 실패한 인코더/프레임은 모두 해제한다. 이미 본격 출력이 시작된 이후의 오류는 결과를 폐기하며 중간부터 다른 코덱을 연결하지 않는다.
+
+`hardwareAcceleration`의 prefer-hardware/prefer-software는 브라우저 힌트일 뿐 실제 실행 장치의 증거가 아니다. raw RGBA는 **프레임 입력 전달 방식**의 폴백이지 소프트웨어 H.264 구현이 아니다. 제품에 WASM/FFmpeg 인코더를 번들하지 않았다. 모든 후보가 실패하면 선택 해상도를 유지한 채 오류/진단을 반환한다.
 
 AVC output을 길이 접두어 NAL 단위 형식으로 요청하고, metadata.decoderConfig.description의 AVCDecoderConfigurationRecord를 avcC에 넣는다. 출력 청크의 타임스탬프를 검증한다. 한 프레임마다 VideoFrame을 close한다. 첫 프레임과 이후 작은 배치마다 flush하고 파일 기록도 기다려 무제한 큐 누적을 피한다. GPU 렌더링 호출은 주 스레드에 있으며 네이티브 인코더 처리는 브라우저 구현에 따른다. 향후 Worker 이전은 별도 확장이다.
 

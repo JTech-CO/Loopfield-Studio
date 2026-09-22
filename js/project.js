@@ -24,10 +24,10 @@ export function validateProject(raw) {
     };
   });
   const out=raw.output||{},fx=raw.effects||{};
-  return { format:'loopfield-project',version:1,appVersion:'1.0.0',name:String(raw.name||'새 루프').slice(0,80),layers,background:color(raw.background,d.background),
+  return { format:'loopfield-project',version:1,appVersion:'1.1.0',name:String(raw.name||'새 루프').slice(0,80),layers,background:color(raw.background,d.background),
     effects:{glow:clamp(finite(fx.glow,.35),0,1.5),exposure:clamp(finite(fx.exposure,1.15),.3,2),contrast:clamp(finite(fx.contrast,1.08),.5,1.8),vignette:clamp(finite(fx.vignette,.25),0,1),aberration:clamp(finite(fx.aberration,0),0,1)},
     output:{resolution:enumValue(out.resolution,['1080p','qhd','uhd','dci2k'],'1080p'),aspect:enumValue(out.aspect,['landscape','portrait','square'],'landscape'),
-      fps:enumValue(Number(out.fps),[24,30,60],30),duration:Math.round(clamp(finite(out.duration,8),2,60)),quality:enumValue(out.quality,['standard','high','master'],'high'),direct:out.direct!==false}
+      fps:enumValue(Number(out.fps),[24,30,60],30),duration:Math.round(clamp(finite(out.duration,8),2,60)),quality:enumValue(out.quality,['standard','high','master'],'high'),encoder:enumValue(out.encoder,['auto','hardware','software'],'auto'),direct:out.direct!==false}
   };
 }
 export function readLocalProject() {

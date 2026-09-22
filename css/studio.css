@@ -21,3 +21,75 @@
 .preview-caption,.timeline-ticks{font-size:11px}.statusbar{font-size:11px}.footer-version{font-size:11px}
 .library .search-box input,.library .category-select{font-size:13px}.editor-heading button{font-size:12px}.code-area{font-size:14px}
 @media(max-width:760px){.control-head,.two-fields label,.field,.inspector-section>p,.capability-box,.check-field{font-size:14px}.mini-note{font-size:13px!important}.code-area{font-size:13px}.preview-caption{font-size:10px}.footer-version{font-size:10px}}
+
+/* v1.1: the frame, not spare viewport height, determines the canvas box. */
+select,select option,select optgroup{color-scheme:dark;background-color:#151a22;color:#f2f3f5}
+select option:disabled{color:#929ca9}select option:checked{background-color:#35404f;color:#fff}
+.preview-column{min-width:0;display:flex;flex-direction:column;gap:0;flex:0 0 auto}
+.preview-shell,.workspace.code-mode .preview-shell{flex:0 0 auto;width:100%;height:auto;aspect-ratio:var(--output-aspect,16 / 9);min-height:0;padding:0;border-radius:8px}
+.preview-shell[data-aspect="portrait"]{width:min(100%,46vh);align-self:center}
+.preview-shell[data-aspect="square"]{width:min(100%,72vh);align-self:center}
+.canvas-surround{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none}
+canvas#preview{box-shadow:none;width:100%;height:100%;max-width:none;max-height:none}
+.preview-caption{bottom:0;left:0;right:0;padding:14px 12px 8px;color:#e0e5ed;background:linear-gradient(transparent,#06080bbd);opacity:0;transition:opacity .15s}
+.preview-shell:hover .preview-caption,.preview-shell:focus-within .preview-caption{opacity:1}
+.quick-output{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:3px 0 0;padding:9px 0;border-top:1px solid var(--line-soft);color:var(--muted);font-size:12px}
+.quick-output-label{font-weight:600;color:var(--text)}.resolution-buttons{display:flex;gap:4px;flex-wrap:wrap}
+.resolution-buttons button{font-size:12px;padding:4px 9px;min-height:30px;background:transparent}
+.resolution-buttons button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:#2b2520}
+#quickDimensions{margin-left:auto;font-size:12px;color:#d0d7e2}
+.category-picker{position:relative;margin:9px 0 15px;flex-shrink:0}
+.category-picker .category-select{margin:0;background:#151a22;justify-content:space-between;font-weight:450;width:100%;min-height:37px}
+.category-menu{position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:40;max-height:340px;overflow-y:auto;padding:5px;background:#202630;border:1px solid #576170;border-radius:7px;box-shadow:0 14px 32px #0009}
+.category-option{display:flex;justify-content:space-between;text-align:left;width:100%;border:0;border-radius:4px;background:#202630;color:#f2f3f5;font-size:13px;min-height:39px;padding:8px 10px;font-weight:450}
+.category-option:hover,.category-option:focus-visible{background:#384555;color:#fff}
+.category-option[aria-selected="true"]{background:#3a3129;color:#ffcfaa}
+.category-option small{font:12px var(--mono);color:inherit}.preset-list{flex:1;min-height:100px}.library-foot{flex-shrink:0}
+#inspectorToggle,.inspector-drawer-heading{display:none}
+.snapshot-dialog{width:480px}.snapshot-dimensions{font-size:25px;color:var(--accent);margin:18px 0 8px}
+.snapshot-dialog .wide{margin-top:20px}.snapshot-dialog .field{margin-top:17px}.snapshot-dialog>p{font-size:13px}
+/* Code mode is a two-pane workspace. Secondary panels are drawers, not a third fixed column. */
+.workspace.code-mode{grid-template-columns:minmax(0,1fr)}
+.workspace.code-mode .stage-column{display:grid;grid-template-columns:minmax(0,var(--preview-share,56%)) 8px minmax(0,1fr);gap:0;padding:20px 22px;overflow:hidden;min-height:0}
+.workspace.code-mode .preview-column{overflow-y:auto;padding-right:16px;min-height:0;min-width:0}
+.workspace.code-mode .editor-panel{display:flex;flex-direction:column;margin:0 0 0 14px;min-height:0;min-width:0;height:100%}
+.workspace.code-mode .code-area{flex:1;height:auto;min-height:200px}.workspace.code-mode .editor-heading{flex-wrap:wrap;row-gap:9px}
+.workspace.code-mode .code-hint{flex-shrink:0;display:flex;flex-wrap:wrap;gap:3px 7px}
+.splitter{align-self:stretch;background:transparent;position:relative;cursor:col-resize;touch-action:none;border-radius:4px}
+.splitter::after{content:"";position:absolute;top:0;bottom:0;left:3px;width:2px;background:var(--line)}
+.splitter:hover::after,.splitter:focus-visible::after{background:var(--accent)}
+.splitter:focus-visible{outline:2px solid var(--accent);outline-offset:2px}body.is-resizing{cursor:col-resize;user-select:none}
+body.code-layout #libraryToggle,body.code-layout #inspectorToggle{display:inline-flex}
+.workspace.code-mode .library,.workspace.code-mode .inspector{display:none}
+.workspace.code-mode .library.is-open{display:flex;position:fixed;left:0;top:66px;bottom:28px;width:268px;z-index:30;box-shadow:16px 0 40px #000b}
+.workspace.code-mode .library .mobile-only{display:inline-flex}
+.workspace.code-mode .inspector.is-open{display:flex;position:fixed;right:0;top:66px;bottom:28px;width:330px;z-index:30;box-shadow:-16px 0 40px #000b}
+.workspace.code-mode .inspector-drawer-heading{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;border-bottom:1px solid var(--line)}
+.preview-shell:fullscreen{aspect-ratio:auto;width:100vw!important;height:100vh!important;max-width:none;padding:0}
+.preview-shell:fullscreen .canvas-surround{inset:0;width:100%;height:100%}
+@media(min-width:1500px){.stage-column{padding:22px 26px 20px}.workspace.code-mode .stage-column{padding:24px 26px}.workspace.code-mode .code-area{font-size:14px}}
+@media(max-width:1220px){.workspace.code-mode .project-title input{width:220px}.workspace.code-mode .preview-tools #resetView span{display:none}.workspace.code-mode .stage-indicators #previewInfo{display:none}}
+@media(max-width:760px){
+ .preview-shell,.workspace.code-mode .preview-shell{height:auto;min-height:0;padding:0;flex:0 0 auto}.preview-caption{font-size:10px}
+ .quick-output{font-size:12px;gap:7px}.resolution-buttons button{font-size:11px;padding:4px 7px}#quickDimensions{margin-left:0;width:100%}
+ .workspace.code-mode{display:flex}.workspace.code-mode .stage-column{display:flex;flex-direction:column;overflow:visible;padding:20px 14px 24px;gap:18px}
+ .workspace.code-mode .preview-column{overflow:visible;padding:0}.workspace.code-mode .editor-panel{margin:0;height:480px;min-height:400px;flex-shrink:0}
+ .workspace.code-mode .splitter{display:none}.workspace.code-mode .library.is-open{top:0;bottom:0;width:280px}
+ .workspace.code-mode .inspector.is-open{top:0;bottom:0;width:min(360px,100vw);overflow-y:auto}
+ .workspace.code-mode .inspector-tabs{position:static}.header-actions #inspectorToggle{width:35px;padding:6px}.header-actions #inspectorToggle span{display:none}
+ .category-option{font-size:14px;min-height:44px}.preview-column{width:100%}.preview-tools .inline-label select{max-width:128px}
+}
+/* Compact controls must not force the split wider than a small laptop viewport. */
+.workspace.code-mode .project-title{min-width:0;flex:1}
+.workspace.code-mode .project-title input{width:100%;min-width:0}
+.workspace.code-mode .stage-indicators{flex-shrink:0}
+.workspace.code-mode .preview-tools{flex-wrap:wrap}
+.workspace.code-mode .editor-heading>div{min-width:0;flex-wrap:wrap}
+.workspace.code-mode .editor-heading>div:last-child{display:flex;gap:4px}
+@media(max-width:1050px) and (min-width:761px){
+ .header-actions #inspectorToggle span,.header-actions #libraryToggle span,.header-actions #openProject span{display:none}
+ .header-actions #inspectorToggle,.header-actions #libraryToggle,.header-actions #openProject{width:35px;padding:6px}
+ .topbar{gap:14px}.header-actions #openExport{font-size:12px;padding:7px 10px}
+ .workspace.code-mode .stage-column{padding:16px}.workspace.code-mode .preview-column{padding-right:10px}
+ .workspace.code-mode .editor-panel{margin-left:10px}
+}

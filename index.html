@@ -18,6 +18,7 @@
   <div class="mode-switch" aria-label="작업 모드"><button id="modeDesign" class="active" aria-pressed="true">만들기</button><button id="modeCode" aria-pressed="false"><span class="mono">{ }</span> 코드</button></div>
   <div class="header-actions">
     <button id="libraryToggle" class="compact" aria-expanded="false"><svg><use href="./assets/icons.svg#grid"/></svg><span>패턴</span></button>
+    <button id="inspectorToggle" class="compact" aria-expanded="false" aria-controls="inspector"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 17h16M9 4v6M15 14v6"/></svg><span>설정</span></button>
     <button id="helpButton" class="quiet"><svg><use href="./assets/icons.svg#help"/></svg><span>사용법</span></button>
     <button id="openProject"><svg><use href="./assets/icons.svg#folder"/></svg><span>열기</span></button>
     <button id="saveProject"><svg><use href="./assets/icons.svg#save"/></svg><span>프로젝트 저장</span></button>
@@ -28,14 +29,18 @@
 <div id="bootError" class="fatal-notice" hidden></div>
 <main class="workspace" id="workspace">
   <aside class="library" id="library" aria-label="패턴 라이브러리">
-    <div class="section-heading"><h2>패턴 라이브러리</h2><span id="presetCount">12</span><button id="closeLibrary" class="icon-button mobile-only" aria-label="패턴 목록 닫기">×</button></div>
+    <div class="section-heading"><h2>패턴 라이브러리</h2><span id="presetCount">32</span><button id="closeLibrary" class="icon-button mobile-only" aria-label="패턴 목록 닫기">×</button></div>
     <p class="library-intro">하나를 골라, 나만의 루프로.</p>
     <label class="search-box"><svg><use href="./assets/icons.svg#search"/></svg><input id="presetSearch" type="search" placeholder="이름으로 찾기" aria-label="패턴 검색"></label>
-    <label class="sr-only" for="presetCategory">패턴 분류</label><select id="presetCategory" class="category-select"><option value="all">모든 패턴</option><option value="geometry">기하학</option><option value="fractal">프랙탈</option><option value="organic">유기적 패턴</option><option value="volume">3D 곡면</option><option value="code">코드 시작점</option></select>
+    <div class="category-picker" id="categoryPicker">
+      <button id="presetCategory" class="category-select" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="categoryMenu" data-value="all"><span id="categoryLabel">모든 패턴</span><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+      <div id="categoryMenu" class="category-menu" role="listbox" aria-label="패턴 분류" hidden></div>
+    </div>
     <div id="presetList" class="preset-list"></div>
     <div class="library-foot"><span class="local-dot"></span> 내 브라우저에서만 처리<span>계정 · 업로드 · API 키 없음</span><button id="newProject" class="text-button">새 프로젝트 시작</button></div>
   </aside>
   <section class="stage-column" id="stage" tabindex="-1" aria-label="루프 편집 화면">
+    <div class="preview-column" id="previewColumn">
     <div class="stage-heading">
       <div class="project-title"><span class="eyebrow">YOUR NEXT LOOP</span><label class="sr-only" for="projectName">프로젝트 이름</label><input id="projectName" value="무한의 궤도" maxlength="80" spellcheck="false"></div>
       <div class="stage-indicators"><span class="pill" id="renderState"><span class="live-dot"></span> LIVE</span><span id="previewInfo" class="mono muted">960 × 540</span></div>
@@ -43,11 +48,17 @@
     <div class="preview-shell" id="previewShell">
       <div class="canvas-surround" id="canvasSurround"><canvas id="preview" aria-label="선택한 셰이더의 실시간 미리보기"></canvas></div>
       <div id="canvasError" class="canvas-error" hidden><svg><use href="./assets/icons.svg#help"/></svg><h3>그래픽 가속을 확인해 주세요</h3><p id="canvasErrorText"></p><button id="reloadButton">페이지 새로고침</button></div>
-      <div class="preview-caption"><span>미리보기</span><span>드래그 이동 · 휠 확대</span></div>
+      <div class="preview-caption"><span>전체 프레임 · 원본 비율 유지</span><span>드래그 이동 · 휠 확대</span></div>
     </div>
     <div class="preview-tools">
-      <label class="inline-label" for="previewQuality">미리보기 <select id="previewQuality"><option value="540">540p · 가볍게</option><option value="720">720p</option><option value="1080">1080p</option></select></label>
-      <div class="tool-group"><button id="resetView" class="quiet" title="선택 레이어의 위치와 확대 초기화"><svg><use href="./assets/icons.svg#focus"/></svg><span>시점 초기화</span></button><button id="checkLoop" class="quiet"><svg><use href="./assets/icons.svg#loop"/></svg><span>루프 검사</span></button><button id="snapshot" class="icon-button" title="선택한 출력 해상도로 PNG 저장" aria-label="고해상도 PNG 저장"><svg><use href="./assets/icons.svg#camera"/></svg></button><button id="fullscreen" class="icon-button" aria-label="미리보기 전체 화면"><svg><use href="./assets/icons.svg#expand"/></svg></button></div>
+      <label class="inline-label" for="previewQuality">미리보기 품질 <select id="previewQuality"><option value="540">540p · 가볍게</option><option value="720">720p</option><option value="1080">1080p</option><option value="1440">2K · QHD</option><option value="2160">4K · 고부하</option></select></label>
+      <div class="tool-group"><button id="resetView" class="quiet" title="선택 레이어의 위치와 확대 초기화"><svg><use href="./assets/icons.svg#focus"/></svg><span>시점 초기화</span></button><button id="checkLoop" class="quiet"><svg><use href="./assets/icons.svg#loop"/></svg><span>루프 검사</span></button><button id="snapshot" class="icon-button" title="PNG 해상도 선택 후 저장" aria-label="PNG 해상도 선택 후 저장"><svg><use href="./assets/icons.svg#camera"/></svg></button><button id="fullscreen" class="icon-button" aria-label="미리보기 전체 화면"><svg><use href="./assets/icons.svg#expand"/></svg></button></div>
+    </div>
+    <div class="quick-output" aria-label="PNG와 MP4 저장 해상도">
+      <span class="quick-output-label">저장 해상도</span>
+      <div id="quickResolution" class="resolution-buttons" role="group" aria-label="출력 해상도 선택">
+        <button data-resolution="1080p" aria-pressed="true">1080p</button><button data-resolution="dci2k" aria-pressed="false">2K DCI</button><button data-resolution="qhd" aria-pressed="false">2K QHD</button><button data-resolution="uhd" aria-pressed="false">4K UHD</button>
+      </div><span id="quickDimensions" class="mono">1920 × 1080</span>
     </div>
     <div class="transport">
       <button id="playPause" class="play-button" aria-label="미리보기 일시정지"><svg><use href="./assets/icons.svg#pause"/></svg></button>
@@ -56,19 +67,22 @@
       <div class="timeline"><label class="sr-only" for="scrub">루프 재생 위치</label><input id="scrub" type="range" min="0" max="10000" value="0" step="1"><div class="timeline-ticks"><span>0</span><span>¼</span><span>½</span><span>¾</span><span id="endTime">8초</span></div></div>
       <span class="loop-duration mono" id="timelineSpec">8s / 30fps</span>
     </div>
+    <section class="layer-panel" aria-label="합성 레이어">
+      <div class="section-heading"><h2>레이어</h2><span id="layerCount">1 / 4</span><span class="muted layer-order-hint">아래에서 위로 합성</span><button id="addLayer" class="text-button"><svg><use href="./assets/icons.svg#plus"/></svg>레이어 추가</button></div>
+      <div id="layerList" class="layer-list"></div>
+      <div class="layer-actions"><button id="duplicateLayer" class="quiet small">복제</button><button id="moveLayerDown" class="quiet small" title="합성 순서 앞으로">← 순서</button><button id="moveLayerUp" class="quiet small" title="합성 순서 뒤로">순서 →</button><button id="removeLayer" class="quiet small">삭제</button><span id="layerExplanation" class="muted">패턴을 겹쳐 더 깊은 장면을 만드세요.</span></div>
+    </section>
+    </div>
+    <div id="splitter" class="splitter" role="separator" tabindex="0" aria-label="캔버스와 코드 너비 조정" aria-orientation="vertical" aria-valuemin="30" aria-valuemax="70" aria-valuenow="56" hidden></div>
     <section class="editor-panel" id="editorPanel" hidden aria-label="GLSL 코드 편집기">
       <div class="editor-heading"><div><span class="file-dot"></span><span id="codeFilename">pattern.glsl</span><span id="codeStatus" class="muted">적용됨</span></div><div><button id="resetCode" class="quiet">되돌리기</button><button id="saveGLSL" class="quiet" title="현재 편집 중인 GLSL 다운로드">.glsl 저장</button><button id="compileCode" class="primary small">적용 <kbd>Ctrl ↵</kbd></button></div></div>
       <div class="code-area"><div id="lineNumbers" class="line-numbers" aria-hidden="true"></div><div class="code-stack"><pre id="codeHighlight" aria-hidden="true"><code></code></pre><textarea id="codeEditor" aria-label="GLSL 소스 코드" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off"></textarea></div></div>
       <pre id="compileError" class="compile-error" role="alert" hidden></pre>
       <div class="code-hint"><code>uAngle</code> 한 바퀴 · <code>uCycle</code> 원형 궤도 · <code>palette(t)</code> 색상 <button id="codeHelp" class="text-button">코드 도움말</button></div>
     </section>
-    <section class="layer-panel" aria-label="합성 레이어">
-      <div class="section-heading"><h2>레이어</h2><span id="layerCount">1 / 4</span><span class="muted layer-order-hint">아래에서 위로 합성</span><button id="addLayer" class="text-button"><svg><use href="./assets/icons.svg#plus"/></svg>레이어 추가</button></div>
-      <div id="layerList" class="layer-list"></div>
-      <div class="layer-actions"><button id="duplicateLayer" class="quiet small">복제</button><button id="moveLayerDown" class="quiet small" title="합성 순서 앞으로">← 순서</button><button id="moveLayerUp" class="quiet small" title="합성 순서 뒤로">순서 →</button><button id="removeLayer" class="quiet small">삭제</button><span id="layerExplanation" class="muted">패턴을 겹쳐 더 깊은 장면을 만드세요.</span></div>
-    </section>
   </section>
   <aside class="inspector" id="inspector" aria-label="패턴과 출력 설정">
+    <div class="inspector-drawer-heading"><strong>스타일 · 영상 출력</strong><button id="closeInspector" class="icon-button" aria-label="설정 패널 닫기">×</button></div>
     <div class="inspector-tabs" role="tablist"><button id="styleTab" role="tab" aria-selected="true" aria-controls="stylePanel" class="active">스타일</button><button id="exportTab" role="tab" aria-selected="false" aria-controls="exportPanel">영상 출력</button></div>
     <div id="stylePanel" class="inspector-content" role="tabpanel" aria-labelledby="styleTab">
       <section class="inspector-section"><div class="eyebrow">SELECTED LAYER</div><h2 id="selectedLayerName">프리즘 블룸</h2><p id="selectedDescription" class="muted"></p><div class="two-fields"><label>합성 방식<select id="blendMode"><option value="normal">일반</option><option value="screen">스크린</option><option value="add">더하기</option><option value="multiply">곱하기</option><option value="difference">차이</option></select></label><label>반복 횟수<select id="layerCycles"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></label></div><div id="opacityControl"></div></section>
@@ -80,34 +94,43 @@
     <div id="exportPanel" class="inspector-content" role="tabpanel" aria-labelledby="exportTab" hidden>
       <section class="inspector-section"><div class="eyebrow">RENDER YOUR LOOP</div><h2>장면을 영상으로.</h2><p class="muted">화면 녹화가 아닌, 한 프레임씩.<br>미리보기와 출력 해상도는 별개입니다.</p>
         <label class="field">화면 비율<select id="outputAspect"><option value="landscape">16:9 · 가로</option><option value="portrait">9:16 · 세로</option><option value="square">1:1 · 정사각형</option></select></label>
-        <label class="field">출력 해상도<select id="outputResolution"><option value="1080p">1080p · Full HD</option><option value="qhd">QHD · 2560 × 1440</option><option value="dci2k">DCI 2K · 2048 × 1080</option><option value="uhd">4K · UHD</option></select></label>
+        <label class="field">출력 해상도<select id="outputResolution"><option value="1080p">1080p · Full HD</option><option value="qhd">2K QHD · 2560 × 1440</option><option value="dci2k">DCI 2K · 2048 × 1080</option><option value="uhd">4K UHD · 3840 × 2160</option></select></label>
         <div class="two-fields"><label>프레임 레이트<select id="outputFPS"><option value="24">24 fps</option><option value="30">30 fps</option><option value="60">60 fps</option></select></label><label>루프 길이 (초)<input id="outputDuration" type="number" min="2" max="60" step="1" value="8"></label></div>
+        <label class="field">인코더 선택<select id="outputEncoder"><option value="auto">자동 · 가능한 인코더 탐색</option><option value="hardware">하드웨어 우선</option><option value="software">소프트웨어 우선 · 호환성</option></select></label>
         <label class="field">압축 품질<select id="outputQuality"><option value="standard">표준 · 작은 파일</option><option value="high">고품질 · 권장</option><option value="master">최고 품질 · 큰 파일</option></select></label>
         <div class="output-card"><div><strong id="outputDimensions" class="mono">1920 × 1080</strong><span>MP4 · H.264 · 오디오 없음</span></div><dl><div><dt>전체 프레임</dt><dd id="outputFrames">240</dd></div><div><dt>목표 비트레이트</dt><dd id="outputBitrate">20 Mbps</dd></div><div><dt>예상 파일 크기</dt><dd id="outputSize">약 20 MB</dd></div></dl></div>
         <label class="check-field"><input id="directSave" type="checkbox"><span>디스크에 직접 저장<small id="directSaveHint">지원 브라우저에서 메모리 사용량을 줄입니다.</small></span></label>
         <p id="memoryWarning" class="warning-note" hidden></p>
-        <div class="capability-box"><span id="codecStatus">인코더를 확인하지 않았습니다.</span><button id="checkCodec" class="text-button">이 설정 지원 확인</button></div>
+        <div class="capability-box"><span id="codecStatus">인코더를 확인하지 않았습니다.</span><button id="checkCodec" class="text-button">실제 1프레임 출력 검사</button><button id="codecDiagnostics" class="text-button" hidden>진단 JSON 저장</button></div>
         <button id="renderVideo" class="primary export-action"><svg><use href="./assets/icons.svg#export"/></svg>MP4 렌더링</button>
-        <p class="mini-note">선택 해상도의 H.264 인코더가 필요합니다. 지원하지 않으면 알리고 멈춥니다. 해상도를 몰래 낮추거나 다른 형식으로 바꾸지 않습니다.</p>
+        <p class="mini-note">선택 크기의 실제 프레임으로 인코더를 검사합니다. 실패하면 다른 프로필·소프트웨어 우선·CPU 프레임 전달을 시도합니다. 모든 경로가 실패하면 진단을 표시하며 크기는 낮추지 않습니다.</p>
       </section>
       <section class="inspector-section"><h3>끊김 없는 루프를 위해</h3><p class="muted">기본 패턴은 주기 함수로 움직입니다. 직접 작성한 코드는 출력 전에 경계 샘플을 검사합니다. 재생기의 파일 전환 지연까지 제거하는 기능은 아닙니다.</p><button id="checkLoopExport" class="secondary wide">루프 경계 검사</button></section>
     </div>
   </aside>
 </main>
-<footer class="statusbar"><span id="saveStatus">브라우저에 자동 저장</span><span id="performanceStatus">WebGL 2 준비 중</span><span class="footer-version">Loopfield 1.0.0 <span class="muted">/ LOCAL FIRST</span></span></footer>
+<footer class="statusbar"><span id="saveStatus">브라우저에 자동 저장</span><span id="performanceStatus">WebGL 2 준비 중</span><span class="footer-version">Loopfield 1.1.0 <span class="muted">/ LOCAL FIRST</span></span></footer>
 <div id="toast" class="toast" role="status" hidden></div>
 <input id="projectFile" type="file" accept=".json,application/json" hidden>
+<dialog id="snapshotDialog" class="snapshot-dialog">
+  <div class="dialog-heading"><div><span class="eyebrow">EXPORT A FRAME</span><h2>PNG 해상도 선택</h2></div><button data-close="snapshotDialog" class="icon-button" aria-label="PNG 저장 창 닫기">×</button></div>
+  <p class="muted">미리보기 크기와 무관하게 선택한 크기로 다시 렌더링합니다. 아래 설정은 MP4 출력에도 동일하게 반영됩니다.</p>
+  <label class="field">저장 해상도<select id="snapshotResolution"><option value="1080p">1080p · 1920 × 1080</option><option value="dci2k">2K DCI · 2048 × 1080</option><option value="qhd">2K QHD · 2560 × 1440</option><option value="uhd">4K UHD · 3840 × 2160</option></select></label>
+  <label class="field">화면 비율<select id="snapshotAspect"><option value="landscape">가로</option><option value="portrait">세로</option><option value="square">정사각형</option></select></label>
+  <p id="snapshotDimensions" class="snapshot-dimensions mono">1920 × 1080</p><p id="snapshotMessage" class="mini-note">현재 재생 위치의 한 프레임을 저장합니다.</p>
+  <button id="confirmSnapshot" class="primary wide">PNG 저장</button>
+</dialog>
 <dialog id="helpDialog" class="help-dialog"><div class="dialog-heading"><div><span class="eyebrow">A SMALL GUIDE</span><h2>처음부터, 어렵지 않게.</h2></div><button data-close="helpDialog" class="icon-button" aria-label="사용법 닫기">×</button></div><div class="dialog-scroll">
-  <div class="guide-steps"><section><span>01</span><h3>패턴을 고릅니다.</h3><p>망델브로, 줄리아, 기하학, 유기적 패턴 중 하나로 시작하세요. 선택한 패턴은 현재 레이어에 적용됩니다.</p></section><section><span>02</span><h3>색과 형태를 바꿉니다.</h3><p>오른쪽 슬라이더와 팔레트를 조정하세요. 레이어를 추가하면 최대 4개까지 겹칠 수 있습니다.</p></section><section><span>03</span><h3>MP4로 가져갑니다.</h3><p>영상 출력에서 크기, 길이, FPS를 정하고 렌더링하세요. 모든 연산은 내 기기에서 이루어집니다.</p></section></div>
+  <div class="guide-steps"><section><span>01</span><h3>패턴을 고릅니다.</h3><p>망델브로, 줄리아, 기하학, 유기적 패턴 중 하나로 시작하세요. 선택한 패턴은 현재 레이어에 적용됩니다.</p></section><section><span>02</span><h3>색과 형태를 바꿉니다.</h3><p>오른쪽 슬라이더와 팔레트를 조정하세요. 레이어를 추가하면 최대 4개까지 겹칠 수 있습니다.</p></section><section><span>03</span><h3>MP4로 가져갑니다.</h3><p>캔버스 아래 저장 해상도에서 1080p / 2K / 4K를 선택하고 영상 출력에서 크기, 길이, FPS를 정하고 렌더링하세요. 모든 연산은 내 기기에서 이루어집니다.</p></section></div>
   <h3>코딩은 이 정도면 시작할 수 있습니다.</h3><pre class="example-code">vec3 pattern(vec2 p) {
   float wave = sin(length(p) * 8.0 - uAngle);
   return palette(length(p) * 0.4)
        * (0.5 + 0.5 * wave);
-}</pre><p><code>p</code>는 픽셀 위치, <code>uAngle</code>은 한 주기 동안 0에서 2π까지 움직이는 각도입니다. <code>palette()</code>는 오른쪽에서 고른 색을 사용합니다. 숫자 8.0을 바꾸는 것만으로도 형태가 달라집니다.</p>
+}</pre><p><code>p</code>는 픽셀 위치, <code>uAngle</code>은 한 주기 동안 0에서 2π까지 움직이는 각도입니다. <code>palette()</code>는 오른쪽에서 고른 색을 사용합니다. 숫자 8.0을 바꾸는 것만으로도 형태가 달라집니다.</p><p>데스크톱 코드 모드는 왼쪽 캔버스 / 오른쪽 편집기로 나뉩니다. 가운데 구분선을 드래그하거나 포커스 후 방향키로 너비를 조절하세요. 패턴과 스타일은 상단 패턴 / 설정 버튼으로 열 수 있습니다.</p>
   <h3>숫자를 슬라이더로 만들기</h3><pre class="example-code">// @slider uDensity 2 20 1 8 | 원의 밀도</pre><p>순서는 이름, 최솟값, 최댓값, 간격, 기본값입니다. 코드에서 <code>uDensity</code>를 사용하고 적용하면 슬라이더가 만들어집니다. <code>uniform</code>은 자동 선언되므로 다시 쓰지 않습니다.</p>
-  <h3>미리 알아두면 좋은 점</h3><p>수동 코드는 <code>uAngle</code>, <code>uCycle</code>처럼 주기적인 값을 사용해야 자연스럽게 이어집니다. <code>uTime</code>을 직접 좌표 이동에 사용하면 루프 끝에서 점프할 수 있습니다. 경계 검사는 4개의 작은 샘플을 비교하는 검사이지 수학적 증명이 아닙니다.</p><p>픽셀 셰이더는 GPU에서 실행됩니다. 출처를 모르는 고부하 코드는 브라우저를 멈추게 할 수 있습니다. JavaScript 실행, 외부 텍스처, Shadertoy 다중 버퍼 가져오기는 지원하지 않습니다. 프랙탈은 32비트 부동소수점이므로 무제한 딥 줌이 아닙니다.</p><p>재생 <kbd>Space</kbd> · 코드 적용 <kbd>Ctrl / ⌘ + Enter</kbd> · 프로젝트 저장 <kbd>Ctrl / ⌘ + S</kbd> · 편집기의 <kbd>Tab</kbd>은 들여쓰기, <kbd>Esc</kbd>는 적용 버튼으로 이동합니다.</p><p><a href="./docs/USER_GUIDE_KO.md" target="_blank" rel="noopener">전체 사용자 가이드</a> · <a href="./docs/GLSL_API.md" target="_blank" rel="noopener">GLSL API</a> · <a href="./tests/browser.html" target="_blank" rel="noopener">내 기기 출력 검사</a><a href="./docs/DEPLOYMENT.md" target="_blank" rel="noopener">GitHub Pages / 도메인 연결</a></p>
+  <h3>미리 알아두면 좋은 점</h3><p>수동 코드는 <code>uAngle</code>, <code>uCycle</code>처럼 주기적인 값을 사용해야 자연스럽게 이어집니다. <code>uTime</code>을 직접 좌표 이동에 사용하면 루프 끝에서 점프할 수 있습니다. 경계 검사는 4개의 작은 샘플을 비교하는 검사이지 수학적 증명이 아닙니다.</p><p>픽셀 셰이더는 GPU에서 실행됩니다. 출처를 모르는 고부하 코드는 브라우저를 멈추게 할 수 있습니다. JavaScript 실행, 외부 텍스처, Shadertoy 다중 버퍼 가져오기는 지원하지 않습니다. 프랙탈은 32비트 부동소수점이므로 무제한 딥 줌이 아닙니다.</p><p>재생 <kbd>Space</kbd> · 코드 적용 <kbd>Ctrl / ⌘ + Enter</kbd> · 프로젝트 저장 <kbd>Ctrl / ⌘ + S</kbd> · 편집기의 <kbd>Tab</kbd>은 들여쓰기, <kbd>Esc</kbd>는 적용 버튼으로 이동합니다.</p><p><a href="./docs/USER_GUIDE_KO.md" target="_blank" rel="noopener">전체 사용자 가이드</a> · <a href="./docs/GLSL_API.md" target="_blank" rel="noopener">GLSL API</a> · <a href="./tests/browser.html" target="_blank" rel="noopener">내 기기 출력 검사</a> · <a href="./docs/DEPLOYMENT.md" target="_blank" rel="noopener">GitHub Pages / 도메인 연결</a></p>
 </div></dialog>
 <dialog id="loopDialog" class="loop-dialog"><div class="dialog-heading"><div><span class="eyebrow">LOOP INSPECTOR</span><h2 id="loopTitle">루프 경계 검사</h2></div><button data-close="loopDialog" class="icon-button" aria-label="루프 검사 닫기">×</button></div><div id="loopResults"></div><p class="mini-note">주기의 0%, 100%, 첫 프레임 다음, 마지막 프레임을 작은 해상도로 비교합니다. 100%를 0%로 강제 치환하지 않습니다. 얇은 선·프랙탈 경계에는 부동소수점 오차가 생길 수 있습니다.</p><button data-close="loopDialog" class="secondary wide">편집으로 돌아가기</button></dialog>
-<dialog id="exportDialog" class="export-dialog"><div class="dialog-heading"><div><span class="eyebrow">MADE IN YOUR BROWSER</span><h2 id="exportTitle">루프를 렌더링하고 있습니다.</h2></div><button id="closeExport" class="icon-button" aria-label="출력 창 닫기" hidden>×</button></div><div id="exportProgressArea"><div class="export-orbit" aria-hidden="true"><span>∞</span></div><progress id="exportProgress" max="1" value="0"></progress><div class="progress-stats"><strong id="exportPercent">0%</strong><span id="exportFrameCount" class="mono">준비 중</span></div><p id="exportMessage" class="muted">기기에서 프레임을 생성합니다. 탭을 닫거나 기기를 절전 모드로 전환하지 마세요.</p></div><video id="resultVideo" controls loop playsinline hidden></video><div id="exportResult" hidden></div><button id="downloadVideo" class="primary wide" hidden>MP4 다운로드</button><button id="cancelExport" class="secondary wide">렌더링 취소</button></dialog>
+<dialog id="exportDialog" class="export-dialog"><div class="dialog-heading"><div><span class="eyebrow">MADE IN YOUR BROWSER</span><h2 id="exportTitle">루프를 렌더링하고 있습니다.</h2></div><button id="closeExport" class="icon-button" aria-label="출력 창 닫기" hidden>×</button></div><div id="exportProgressArea"><div class="export-orbit" aria-hidden="true"><span>∞</span></div><progress id="exportProgress" max="1" value="0"></progress><div class="progress-stats"><strong id="exportPercent">0%</strong><span id="exportFrameCount" class="mono">준비 중</span></div><p id="exportMessage" class="muted">기기에서 프레임을 생성합니다. 탭을 닫거나 기기를 절전 모드로 전환하지 마세요.</p></div><video id="resultVideo" controls loop playsinline hidden></video><div id="exportResult" hidden></div><button id="downloadVideo" class="primary wide" hidden>MP4 다운로드</button><button id="exportDiagnostics" class="text-button wide" hidden>출력 진단 JSON 저장</button><button id="cancelExport" class="secondary wide">렌더링 취소</button></dialog>
 </body>
 </html>
