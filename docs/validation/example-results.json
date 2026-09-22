@@ -1,0 +1,41 @@
+[
+  {
+    "file": "01-neon-orbits",
+    "report": {
+      "mae": 2.3148148148148147e-05,
+      "rmse": 0.004811252243246881,
+      "max": 1,
+      "match": true,
+      "motionRMSE": 11.22175518142558,
+      "width": 320,
+      "height": 180,
+      "samples": 4
+    }
+  },
+  {
+    "file": "02-fractal-tides",
+    "report": {
+      "mae": 5.787037037037037e-06,
+      "rmse": 0.0024056261216234406,
+      "max": 1,
+      "match": true,
+      "motionRMSE": 12.805430976737956,
+      "width": 320,
+      "height": 180,
+      "samples": 4
+    }
+  },
+  {
+    "file": "03-gyroid-signal",
+    "report": {
+      "mae": 0,
+      "rmse": 0,
+      "max": 0,
+      "match": true,
+      "motionRMSE": 17.728592169827646,
+      "width": 320,
+      "height": 180,
+      "samples": 4
+    }
+  }
+]

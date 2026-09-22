@@ -1,0 +1,83 @@
+{
+  "format": "loopfield-project",
+  "version": 1,
+  "appVersion": "1.0.0",
+  "name": "겹쳐지는 궤도",
+  "layers": [
+    {
+      "id": "92b62124-416c-454b-a737-bf8f3c5db096",
+      "preset": "prism",
+      "name": "프리즘 블룸",
+      "source": "// @slider uPetals 3 16 1 7 | 대칭 수\n// @slider uBands 3 18 1 9 | 빛의 겹\n// @slider uTwist 0 3 0.05 1.2 | 꼬임\nvec3 pattern(vec2 p) {\n  float r=length(p), a=atan(p.y,p.x);\n  float wave=sin(a*uPetals + uTwist*sin(r*4.0-uAngle));\n  float field=r*(uBands+1.6*wave) - 0.6*sin(uAngle);\n  float line=pow(0.5+0.5*cos(field*TAU), 18.0);\n  float halo=0.16/(0.15+abs(sin(field*PI)));\n  vec3 col=palette(r*0.55+wave*0.13+0.12*sin(uAngle));\n  return col*(line*0.75+halo*0.35)*exp(-r*0.65);\n}",
+      "draft": null,
+      "enabled": true,
+      "opacity": 1,
+      "blend": "normal",
+      "zoom": 1,
+      "rotation": 0,
+      "offset": [
+        0,
+        0
+      ],
+      "cycles": 1,
+      "phase": 0,
+      "seed": 3,
+      "colors": [
+        "#65fbd5",
+        "#ac76ff",
+        "#ffb86c"
+      ],
+      "hue": 0,
+      "params": {
+        "uPetals": 7,
+        "uBands": 9,
+        "uTwist": 1.2
+      }
+    },
+    {
+      "id": "58070df2-17d9-4578-b49b-c6da0aa949cb",
+      "preset": "orbital",
+      "name": "궤도 링",
+      "source": "// @slider uRings 3 14 1 8 | 궤도 수\n// @slider uTilt 0.15 1 0.01 0.5 | 궤도 기울기\nvec3 pattern(vec2 p) {\n  vec3 col=vec3(0.0);\n  for(int i=0;i<14;i++) {\n    if(i>=int(uRings))break;\n    float fi=float(i); vec2 q=rotate(fi*PI/uRings+.2*sin(uAngle))*p;\n    q.y/=uTilt+.1*sin(uAngle+fi);\n    float radius=.4+fi*.055+.04*cos(uAngle+fi);\n    float d=abs(length(q)-radius);\n    float light=.015/(d+.018);\n    col+=palette(fi/uRings+.1*sin(uAngle))*light;\n  }\n  return col*.32;\n}",
+      "draft": null,
+      "enabled": true,
+      "opacity": 0.28,
+      "blend": "screen",
+      "zoom": 1,
+      "rotation": 20,
+      "offset": [
+        0,
+        0
+      ],
+      "cycles": 1,
+      "phase": 0.12,
+      "seed": 3,
+      "colors": [
+        "#ff64bc",
+        "#6fe8ff",
+        "#fff1a3"
+      ],
+      "hue": 0,
+      "params": {
+        "uRings": 8,
+        "uTilt": 0.5
+      }
+    }
+  ],
+  "effects": {
+    "glow": 0.48,
+    "exposure": 1.15,
+    "contrast": 1.08,
+    "vignette": 0.25,
+    "aberration": 0.09
+  },
+  "background": "#080b12",
+  "output": {
+    "resolution": "1080p",
+    "aspect": "landscape",
+    "fps": 30,
+    "duration": 8,
+    "quality": "high",
+    "direct": true
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "presets": [
+    {
+      "id": "prism",
+      "report": {
+        "mae": 1.736111111111111e-05,
+        "rmse": 0.004166666666666667,
+        "max": 1,
+        "match": true,
+        "motionRMSE": 12.517284577512985,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 13.923773148148149,
+      "coverage": 0.2501215277777778
+    },
+    {
+      "id": "mandelbrot",
+      "report": {
+        "mae": 0,
+        "rmse": 0,
+        "max": 0,
+        "match": true,
+        "motionRMSE": 12.714342841409024,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 91.32972800925926,
+      "coverage": 0.9030555555555555
+    },
+    {
+      "id": "julia",
+      "report": {
+        "mae": 0,
+        "rmse": 0,
+        "max": 0,
+        "match": true,
+        "motionRMSE": 15.140177187793338,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 84.98224537037036,
+      "coverage": 0.9784895833333334
+    },
+    {
+      "id": "kaleido",
+      "report": {
+        "mae": 0,
+        "rmse": 0,
+        "max": 0,
+        "match": true,
+        "motionRMSE": 12.633053445301806,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 34.50767361111111,
+      "coverage": 0.9102430555555555
+    },
+    {
+      "id": "ribbons",
+      "report": {
+        "mae": 3.472222222222222e-05,
+        "rmse": 0.005892556509887896,
+        "max": 1,
+        "match": true,
+        "motionRMSE": 34.35571622406552,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 12.305277777777778,
+      "coverage": 0.14005208333333333
+    },
+    {
+      "id": "moire",
+      "report": {
+        "mae": 0,
+        "rmse": 0,
+        "max": 0,
+        "match": true,
+        "motionRMSE": 13.391900666903942,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 129.00804398148148,
+      "coverage": 0.7648090277777778
+    },
+    {
+      "id": "interference",
+      "report": {
+        "mae": 0,
+        "rmse": 0,
+        "max": 0,
+        "match": true,
+        "motionRMSE": 2.3688773419303732,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 34.367407407407406,
+      "coverage": 0.6354166666666666
+    },
+    {
+      "id": "voronoi",
+      "report": {
+        "mae": 1.736111111111111e-05,
+        "rmse": 0.004166666666666667,
+        "max": 1,
+        "match": true,
+        "motionRMSE": 8.83698660041566,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 38.96589699074074,
+      "coverage": 1
+    },
+    {
+      "id": "domain",
+      "report": {
+        "mae": 0,
+        "rmse": 0,
+        "max": 0,
+        "match": true,
+        "motionRMSE": 43.563191914904664,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 51.771574074074074,
+      "coverage": 1
+    },
+    {
+      "id": "orbital",
+      "report": {
+        "mae": 0,
+        "rmse": 0,
+        "max": 0,
+        "match": true,
+        "motionRMSE": 1.161476550679254,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 14.513559027777777,
+      "coverage": 0.3294270833333333
+    },
+    {
+      "id": "gyroid",
+      "report": {
+        "mae": 0,
+        "rmse": 0,
+        "max": 0,
+        "match": true,
+        "motionRMSE": 18.349425544797693,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 26.962471064814814,
+      "coverage": 0.22572916666666668
+    },
+    {
+      "id": "starter",
+      "report": {
+        "mae": 9.259259259259259e-05,
+        "rmse": 0.011785113019775792,
+        "max": 2,
+        "match": true,
+        "motionRMSE": 0.9626683354479226,
+        "width": 320,
+        "height": 180,
+        "samples": 4
+      },
+      "avg": 101.40341435185185,
+      "coverage": 0.8242881944444445
+    }
+  ],
+  "nonperiodic": {
+    "mae": 85,
+    "rmse": 147.22431864335456,
+    "max": 255,
+    "match": false,
+    "motionRMSE": 0,
+    "width": 320,
+    "height": 180,
+    "samples": 4
+  },
+  "uhd": {
+    "width": 3840,
+    "height": 2160,
+    "size": 33177600,
+    "center": [
+      0,
+      4,
+      2,
+      255
+    ],
+    "glError": 0
+  }
+}

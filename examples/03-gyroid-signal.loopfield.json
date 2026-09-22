@@ -1,0 +1,82 @@
+{
+  "format": "loopfield-project",
+  "version": 1,
+  "appVersion": "1.0.0",
+  "name": "자이로이드 시그널",
+  "layers": [
+    {
+      "id": "b638ea61-de67-46f4-a100-5f956b4f7d5b",
+      "preset": "gyroid",
+      "name": "자이로이드 조각",
+      "source": "// @slider uFrequency 2 8 0.2 4.0 | 곡면 주파수\n// @slider uThickness 0.06 0.4 0.01 0.16 | 곡면 두께\nfloat shape(vec3 p) {\n  p.xz=rotate(uAngle)*p.xz;\n  vec3 q=p*uFrequency;\n  float gy=dot(sin(q),cos(q.yzx));\n  return max((abs(gy)-uThickness)/uFrequency*.55,length(p)-1.1);\n}\nvec3 pattern(vec2 p) {\n  vec3 ro=vec3(0,0,3.4),rd=normalize(vec3(p,-2.2));\n  float t=0.0,d=0.0; bool hit=false;\n  for(int i=0;i<96;i++) {\n    d=shape(ro+rd*t); if(d<.0015){hit=true;break;}\n    t+=max(d,.001); if(t>5.0)break;\n  }\n  if(!hit)return vec3(.008,.01,.018);\n  vec3 pos=ro+rd*t; vec2 e=vec2(.002,0);\n  vec3 n=normalize(vec3(shape(pos+e.xyy)-shape(pos-e.xyy),shape(pos+e.yxy)-shape(pos-e.yxy),shape(pos+e.yyx)-shape(pos-e.yyx)));\n  vec3 light=normalize(vec3(-.7,.9,1.0));\n  float diff=max(dot(n,light),0.0), rim=pow(1.0-max(dot(n,-rd),0.0),3.0);\n  return palette(pos.y*.28+pos.x*.17)*(.18+.75*diff)+palette(.7)*rim*.4;\n}",
+      "draft": null,
+      "enabled": true,
+      "opacity": 1,
+      "blend": "normal",
+      "zoom": 1,
+      "rotation": 0,
+      "offset": [
+        0,
+        0
+      ],
+      "cycles": 1,
+      "phase": 0,
+      "seed": 3,
+      "colors": [
+        "#65fbd5",
+        "#ac76ff",
+        "#ffb86c"
+      ],
+      "hue": 0,
+      "params": {
+        "uFrequency": 4,
+        "uThickness": 0.16
+      }
+    },
+    {
+      "id": "6183878c-56c3-4055-9e53-9ee25001afcb",
+      "preset": "orbital",
+      "name": "궤도 링",
+      "source": "// @slider uRings 3 14 1 8 | 궤도 수\n// @slider uTilt 0.15 1 0.01 0.5 | 궤도 기울기\nvec3 pattern(vec2 p) {\n  vec3 col=vec3(0.0);\n  for(int i=0;i<14;i++) {\n    if(i>=int(uRings))break;\n    float fi=float(i); vec2 q=rotate(fi*PI/uRings+.2*sin(uAngle))*p;\n    q.y/=uTilt+.1*sin(uAngle+fi);\n    float radius=.4+fi*.055+.04*cos(uAngle+fi);\n    float d=abs(length(q)-radius);\n    float light=.015/(d+.018);\n    col+=palette(fi/uRings+.1*sin(uAngle))*light;\n  }\n  return col*.32;\n}",
+      "draft": null,
+      "enabled": true,
+      "opacity": 0.12,
+      "blend": "screen",
+      "zoom": 1,
+      "rotation": 20,
+      "offset": [
+        0,
+        0
+      ],
+      "cycles": 1,
+      "phase": 0.12,
+      "seed": 3,
+      "colors": [
+        "#ff64bc",
+        "#6fe8ff",
+        "#fff1a3"
+      ],
+      "hue": 0,
+      "params": {
+        "uRings": 8,
+        "uTilt": 0.5
+      }
+    }
+  ],
+  "effects": {
+    "glow": 0.27,
+    "exposure": 1.15,
+    "contrast": 1.08,
+    "vignette": 0.25,
+    "aberration": 0.06
+  },
+  "background": "#080b12",
+  "output": {
+    "resolution": "1080p",
+    "aspect": "landscape",
+    "fps": 30,
+    "duration": 8,
+    "quality": "high",
+    "direct": true
+  }
+}

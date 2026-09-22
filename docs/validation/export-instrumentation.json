@@ -1,0 +1,119 @@
+{
+  "description": "REAL WebGL rendering; FIXTURE STUB VideoEncoder/VideoFrame. Not a native codec test.",
+  "frames": 12,
+  "width": 1920,
+  "height": 1080,
+  "bytes": 735823,
+  "progressEvents": 3,
+  "captured": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 0,
+      "duration": 33333,
+      "alpha": "discard",
+      "red": 0
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 33333,
+      "duration": 33334,
+      "alpha": "discard",
+      "red": 21
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 66667,
+      "duration": 33333,
+      "alpha": "discard",
+      "red": 42
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 100000,
+      "duration": 33333,
+      "alpha": "discard",
+      "red": 64
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 133333,
+      "duration": 33334,
+      "alpha": "discard",
+      "red": 85
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 166667,
+      "duration": 33333,
+      "alpha": "discard",
+      "red": 106
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 200000,
+      "duration": 33333,
+      "alpha": "discard",
+      "red": 128
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 233333,
+      "duration": 33334,
+      "alpha": "discard",
+      "red": 149
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 266667,
+      "duration": 33333,
+      "alpha": "discard",
+      "red": 170
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 300000,
+      "duration": 33333,
+      "alpha": "discard",
+      "red": 191
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 333333,
+      "duration": 33334,
+      "alpha": "discard",
+      "red": 212
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 366667,
+      "duration": 33333,
+      "alpha": "discard",
+      "red": 234
+    },
+    {
+      "width": 1920,
+      "height": 1080,
+      "timestamp": 0,
+      "duration": 33333,
+      "alpha": "discard",
+      "red": 0
+    }
+  ],
+  "allFramesClosed": true,
+  "encodersClosed": true,
+  "cancelRaisesAbortError": true,
+  "completedExportCapturedFrames": 12,
+  "separateCancelTestCapturedFrames": 1
+}

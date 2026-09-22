@@ -1,0 +1,38 @@
+name: Deploy Loopfield Studio
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Unit tests (runner-provided Node)
+        run: node --test tests/*.test.mjs
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Prepare static artifact
+        run: |
+          mkdir -p _site/tests
+          cp index.html .nojekyll README.md LICENSE _site/
+          cp -R css js assets docs examples _site/
+          cp tests/browser.html tests/browser.css tests/browser.js _site/tests/
+      - name: Upload static artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
