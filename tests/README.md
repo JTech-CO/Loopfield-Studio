@@ -1,5 +1,7 @@
 # Development tests
 
+**English** · [한국어](README-KR.md)
+
 These tools are optional developer dependencies. The deployed Studio does not use Python, Node, FFmpeg, Pillow or Playwright.
 
 ## Pure JS tests
@@ -39,3 +41,7 @@ Results go to `test-artifacts/browser/`. Graphics tests regenerate the local pre
 ## Native browser codec test
 
 Open `tests/browser.html` on the actual HTTPS/localhost deployment. It encodes 2 seconds at the selected resolution and 24/30/60fps, remuxes to MP4 and decodes with a video element. Export the JSON report with the browser/OS/settings. Also test long videos and the native file picker in Studio.
+
+## Language and branding regression
+
+Serve the repository on localhost:8000 with its original CSP, then run `python -X utf8 tests/qa_language.py`. Checks cover language switching/reload, project and draft preservation, accessible labels, documentation links, responsive widths, reduced motion and export localization. When a native encoder is available, it also downloads and plays a 1080p MP4. Artifacts go to `test-artifacts/language/`.

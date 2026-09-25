@@ -1,19 +1,29 @@
 # Changelog
 
+**English** · [한국어](CHANGELOG-KR.md)
+
+## Unreleased / 2026-09-26
+
+- Add a persistent KR/EN toggle, including dynamic status messages and accessible labels, without changing project data or shader drafts.
+- Separate English and Korean documentation with reciprocal links.
+- Refine Korean export, frame-rate and layer-order wording.
+- Add separate site and repository social-preview artwork; wire site Open Graph/Twitter metadata.
+- Replace the logo with layered orbits and use it in export progress, respecting reduced motion.
+
 ## 1.1.0 / 2026-09-22
 
-- 코드 모드: 캔버스 왼쪽, 편집기 오른쪽의 가변 분할. 마우스 드래그와 방향키, Home 초기화. 패턴/설정은 서랍으로 전환.
-- 미리보기: 영상 비율로 프레임 영역을 결정해 내부 여백 제거. 원본 비율을 보존하며 세로/정사각형/전체 화면 대응.
-- 해상도: 미리보기 품질과 별도로 1080p/DCI 2K/QHD/UHD 빠른 출력 선택. PNG 해상도 대화상자. 미리보기 자체도 1440p/2160p 선택 가능.
-- H.264: ceil(크기/16) 기반 MaxFS·MaxMBPS·프로필 비트레이트로 적합 레벨 선택. 브라우저 하드웨어/소프트웨어 우선 후보, 실제 첫 프레임 encode/flush 검증, 실패 시 다른 후보와 CPU RGBA 입력 재시도. 첫 성공 프레임은 중복 없이 출력에 재사용.
-- 인코더 검사 취소, 실패 진단 JSON, 설정 변경 시 이전 검사 결과 무효화. 해상도를 자동 축소하지 않음.
-- 패턴 분류 필터: 자체 다크 HTML 목록, 선택/포커스/키보드/분류 개수. 나머지 select/option에도 명시적 다크 색 지정.
-- 20개 GLSL 프리셋 추가: 로그 나선, 트루셰 회로, 육각 펄스, 극좌표 격자, 장미 곡선, 리사주 신호, 동심원 격자, 준결정 간섭, 버닝 십, 3차 멀티브로, 뉴턴 수렴 영역, 시에르핀스키, 오로라, 코스틱, 메타볼, 지형 사구, 플라스마, 토러스, 슈퍼타원체, 슈바르츠 P 곡면. 총 32개.
-- v1.0.0 JSON 스키마와 기존 소스 유지. 누락된 encoder 설정은 auto로 마이그레이션.
-- 실제 실행한 회귀검사와 아직 검증하지 못한 네이티브 범위는 [검증 보고서](docs/TEST_REPORT.md)에 구분함.
+- Resizable code layout with preview left/editor right, pointer and keyboard controls, Home reset, library/settings drawers.
+- Aspect-correct preview without excessive internal whitespace; portrait, square and fullscreen support.
+- Quick 1080p/DCI 2K/QHD/UHD export selection and PNG resolution dialog, independent of preview quality. Preview also supports 1440p/2160p.
+- H.264 level selection based on rounded macroblocks, throughput and profile bitrate. Hardware/software preference candidates, actual first-frame encode/flush, alternate candidates and CPU RGBA retry. Reuse the successful first frame without duplication.
+- Cancellable encoder tests, JSON diagnostics and invalidation after settings change. No automatic resolution reduction.
+- Dark HTML category listbox with selection, focus, keyboard support and counts. Explicit colors for other selects/options.
+- Twenty additional GLSL presets: spiral, Truchet, hex pulse, polar grid, rose, Lissajous, concentric grid, quasicrystal, Burning Ship, Multibrot, Newton, Sierpinski, aurora, caustics, metaballs, dunes, plasma, torus, superellipsoid and Schwarz P; 32 total.
+- Preserve v1.0.0 JSON and source; missing encoder preference becomes auto.
+- Separate actual test evidence from unverified native behavior in the [report](docs/TEST_REPORT.md).
 
 ## 1.0.0 / 2026-09-22
 
-ShaderDesk와 독립된 첫 구현이다. 12개 GLSL 프리셋, 4레이어 합성, 후처리, 코드/슬라이더 편집, 샘플 기반 루프 검사, 1080p/QHD/DCI 2K/UHD 프레임 출력, WebCodecs H.264와 자체 MP4 writer, JSON/GLSL/PNG 보관, 정적 Pages 배포를 포함한다.
+Initial implementation independent of ShaderDesk: 12 presets, four-layer composition, post-processing, code/sliders, sampled loop inspection, 1080p/QHD/DCI 2K/UHD output, WebCodecs H.264, an original MP4 writer, JSON/GLSL/PNG saving and static Pages deployment.
 
-개발 검증은 계층별로 기록했다. 실제 WebGL·4K 프레임·MP4 muxer의 AVC 디코딩·UI는 통과했다. 대상 기기의 native WebCodecs와 File System Access 실기기 검증은 별도의 테스트 페이지를 통해 수행해야 한다. 완전한 플랫폼 인증 또는 상용 SLA를 뜻하는 버전은 아니다.
+Development evidence covers real WebGL, 4K frames, AVC decoding through the muxer and UI. Native WebCodecs and File System Access require target-device testing. This version is not a complete platform certification or commercial SLA.

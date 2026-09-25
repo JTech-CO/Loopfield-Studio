@@ -1,59 +1,59 @@
-# v1.1.0 검증 보고서 / 2026-09-22
+# v1.1.0 validation report / 2026-09-22
 
-## 범위
+**English** · [한국어](TEST_REPORT-KR.md)
 
-요청한 좌우 코드 편집, 캔버스 여백, 출력 해상도 노출/인코더 협상, 패턴 목록/프리셋 확장을 회귀검증했다. **네이티브 브라우저 H.264 인코딩 전체 경로는 이 제작 환경에서 실행하지 못했다.** 단순 지원 조회, 인코더 스텁, FFmpeg 기반 AVC 시험을 네이티브 WebCodecs 검증으로 합산하지 않았다.
+This historical report covers the v1.1.0 layout, resolution, encoder negotiation and preset expansion. The original environment **did not execute the complete native browser H.264 path**. Support queries, encoder stubs and FFmpeg-based AVC tests are not counted as native WebCodecs validation.
 
-| 검사 | 결과 |
+| Check | Result |
 |---|---|
-| Node 순수 로직·프로젝트·MP4·AVC 후보·실제 압축 실패를 모사한 재시도 | 30개 통과 |
-| 실제 WebGL 2 프리셋 컴파일/렌더 | 32개 통과 |
-| 기본값 시작/끝 저해상도 루프 경계 | 32개 샘플 일치 |
-| 각 프리셋의 슬라이더 전체 min / 전체 max 렌더 | 64개 렌더, GL error 0 |
-| UI 조작·크기·다크 필터·키보드·분할·PNG·오류 복구·반응형 | 35개 통과 |
-| 실제 PNG 픽셀 크기 | 1080p, DCI 2K, QHD, UHD 가로·세로·정사각형, 총 6개 통과 |
-| UI 버튼으로 4K PNG 다운로드 | 3840×2160 픽셀, 6,041,269 bytes |
-| 출력 파이프라인 계측 | 실제 4K WebGL + VideoEncoder/VideoFrame 스텁. canvas/RGBA 각 12프레임, phase/PTS/자원 해제 통과. 첫 프레임 중복 없음. 취소 통과 |
-| 실제 AVC 입력 → 앱 MP4 writer → 재디코딩 | 7개 설정 × 메모리/직접 writer = 14개 통과, 프레임 해시·순서 일치 |
-| 대상 기기의 네이티브 WebCodecs 전체 MP4 출력 | 미실행 |
-| 실제 OS 파일 선택기/디스크 쓰기·권한 | 미실행, writer 어댑터만 검증 |
-| 재시작 뒤 localStorage 영속성 | 이 환경에서 미실행 |
+| Node logic, projects, MP4, AVC and simulated encoding retries | 30 passed |
+| Actual WebGL 2 preset compilation/rendering | 32 passed |
+| Default low-resolution endpoint samples | All 32 matched |
+| All sliders at minimum / maximum | 64 renders; no GL errors |
+| UI, layout, dark filters, keyboard, split, PNG, recovery, responsive | 35 passed |
+| Actual PNG dimensions | Six landscape/portrait/square cases across 1080p, DCI 2K, QHD, UHD passed |
+| UI 4K PNG download | 3840×2160; 6,041,269 bytes |
+| Export instrumentation | Real 4K WebGL plus VideoEncoder/VideoFrame stubs; canvas/RGBA 12-frame timing, cleanup and cancellation passed; no duplicated first frame |
+| Actual AVC → app MP4 writer → decode | Seven settings × memory/direct writer = 14 passed; frame hashes and order matched |
+| Native full WebCodecs export on target devices | Not run in the original environment |
+| Native OS file picker and disk permissions | Not run; writer adapter only |
+| localStorage across restart | Not run in the original environment |
 
-실행 자료는 [validation/v1.1.0](validation/v1.1.0/)에 있다. 과거 보고서와 자료는 [validation/v1.0.0](validation/v1.0.0/)로 분리했다. 스크린샷과 32개 썸네일은 실제 GLSL 프레임에서 캡처했다.
+Evidence is under [validation/v1.1.0](validation/v1.1.0/). Earlier records are under [validation/v1.0.0](validation/v1.0.0/). Screenshots and all 32 thumbnails came from actual GLSL frames.
 
-## 네 가지 수정의 확인
+## UI findings
 
-일반 모드 1600×1000에서 실제 canvas의 가로·세로는 프레임 영역의 99% 이상이었다. 남는 높이에 맞춰 과도한 여백을 만드는 기존 flex 동작을 제거했다. 가로·세로·정사각형은 원본 비율을 보존한다.
+At 1600×1000 the canvas covered over 99% of its frame in both dimensions. The old excess flex whitespace was removed. Landscape, portrait and square retained their aspect ratios.
 
-코드 모드에서 프리뷰와 편집기의 상단 좌표가 같고 프리뷰의 오른쪽 끝보다 코드 편집기의 왼쪽 끝이 뒤에 있다. 구분선 드래그/방향키/Home, 스타일 서랍 열기/닫기를 확인했다. 1024px와 768px는 좌우 분할, 390px는 상하 배치이며 문서 가로 넘침이 없었다.
+Code preview and editor tops aligned, with the editor to the right. Divider drag, arrows, Home and settings drawers passed. Widths 1024 and 768 used side-by-side panels; 390 stacked vertically without horizontal overflow.
 
-사용자가 4K 버튼을 누르면 영상 출력 select와 PNG 대화상자가 모두 UHD를 가리킨다. PNG 대화상자에서 DCI 2K로 바꾸면 MP4 설정도 함께 변경된다. 실제 PNG 다운로드의 IHDR 및 이미지 크기를 확인했다. 인코더 검사 실패 후에도 선택값 UHD가 유지되었다.
+Selecting 4K synchronized MP4 and PNG controls. Selecting DCI 2K in the PNG dialog also updated MP4. The downloaded PNG header and pixels confirmed size. Failed codec checks preserved UHD selection.
 
-필터 팝업은 자체 HTML dark listbox이다. 기본 항목 배경 rgb(32,38,48), 전경 rgb(242,243,245)를 확인했다. 분류/검색/방향키 선택을 시험했고 프랙탈 분류에 6개가 포함되었다.
+The HTML dark listbox used background rgb(32,38,48) and text rgb(242,243,245). Category/search/keyboard selection passed, with six fractal presets.
 
-## 브라우저 시험 환경
+## Original browser environment
 
-Chromium + ANGLE SwiftShader + Xvfb에서 실행했다. 실제 WebGL shader compiler, framebuffer, readPixels, PNG encoder를 사용했으며 GPU 그림을 모킹하지 않았다. 하드웨어 GPU 속도 벤치마크는 아니다.
+Chromium + ANGLE SwiftShader + Xvfb used the real shader compiler, framebuffer, readPixels and PNG encoder. This was not a hardware performance benchmark.
 
-브라우저 정책상 외부/localhost 문서로 직접 이동할 수 없어 about:blank 문서에 로컬 리소스를 route fulfillment로 제공했다. 테스트 문서에만 base 경로를 추가하고 CSP meta를 제거했으며, 외부 SVG 참조는 동일 심볼의 인라인 복사로 바꿨다. 배포 소스 CSP는 유지했다. 이 시험은 실제 Pages 응답·배포·CSP 네트워크 동작을 검증하지 않는다.
+Navigation restrictions required an about:blank document with locally fulfilled routes. Only the test document had a base tag, omitted CSP and inline copies of SVG symbols. Production CSP stayed intact. These tests do not establish Pages response or CSP-network behavior.
 
-이 문서는 secure context가 아니므로 네이티브 VideoEncoder가 노출되지 않았다. UI의 실제 1프레임 검사에서 HTTPS 오류가 명시되고 선택 해상도가 바뀌지 않음을 확인했다. 브라우저의 H.264 지원 여부는 사용자의 HTTPS/localhost에서 `tests/browser.html`로 확인해야 한다.
+That document was not a secure context and exposed no native VideoEncoder. The UI correctly reported the HTTPS error and preserved resolution. Native codec support must be checked on HTTPS/localhost.
 
-## AVC / MP4 시험의 의미
+## AVC and instrumentation scope
 
-FFmpeg/libx264는 **개발 시험용**이다. 1080p/30, QHD/30, DCI 2K/24, UHD/30, UHD/60, 세로 1080×1920/30의 각 12프레임과 B-frame 320×180/30의 24프레임을 생성했다. 압축 샘플·AVC 설정을 추출해 앱의 js/mp4.js로 메모리/직접쓰기 각각 묶고 ffprobe와 재디코딩 프레임 해시를 비교했다. FFmpeg가 앱 출력 인코더로 들어간 것이 아니다.
+Development-only FFmpeg/libx264 generated 12 frames each at 1080p/30, QHD/30, DCI 2K/24, UHD/30, UHD/60 and portrait 1080×1920/30, plus 24 B-frames at 320×180/30. Samples and AVC configuration were remuxed with `js/mp4.js` using both writers; ffprobe and decoded frame hashes matched references. FFmpeg is not an app encoder dependency.
 
-출력 계측은 네이티브 API 대신 명시적 스텁을 썼다. 실제 3840×2160 렌더의 픽셀을 읽어 i/N의 색과 PTS가 일치하는지, RGBA 폴백에도 해상도·프레임 수·방향이 유지되는지 확인했다. 이 결과는 실제 H.264 압축 성공의 증거가 아니라 **프레임 전달과 리소스 수명 회귀검사**이다.
+Export instrumentation read actual 3840×2160 pixels and checked i/N colors, timestamps, RGBA orientation, frame counts and resource lifetimes with explicit native-API stubs. This verifies frame delivery and cleanup, not actual H.264 encoding.
 
-## 재현 / 실기기 검증
+## Reproduction
 
 ```sh
 node --test tests/*.test.mjs
 python tests/validate_media.py --out ./test-artifacts/media
 ```
 
-[선택적 Playwright 회귀검사 실행법](../tests/README.md)도 포함했다.
+See [optional browser regressions](../tests/README.md). On HTTPS/localhost, `tests/browser.html` offers 32 graphics checks and a two-second native WebCodecs → MP4 → video-decode test at the chosen resolution and 24/30/60 fps. Studio's single-frame check is a quicker probe, not proof of full export success.
 
-HTTPS 또는 localhost에서 `tests/browser.html`을 열면 32개 그래픽 검사와 선택 해상도·24/30/60fps의 **네이티브 WebCodecs → MP4 → video 재디코딩** 검사를 실행한다. 길이는 2초이다. Studio의 실제 1프레임 검사는 더 빠른 사전 확인이고 전체 영상 완료를 보장하지 않는다.
+Target-device checks should cover Windows/macOS browsers, UHD 60 fps for 60 seconds, heavy layered fractals, memory limits, direct disk saving/cancellation and tab sleep/recovery. Software preference is a hint, not a bundled encoder. Sample matches are not a continuity proof.
 
-공개 서비스 전 Windows/macOS 목표 브라우저, UHD 60fps·60초, 무거운 프랙탈 여러 레이어, 메모리 상한, 디스크 저장·취소, 탭 절전/복귀를 실기기로 확인해야 한다. `prefer-software`는 힌트이며 내장 WASM 인코더가 아니다. 브라우저에 없는 H.264 지원을 보장하지 않는다. 저해상도 루프 샘플 일치도 수학적 연속성 증명은 아니다.
+For the later language/branding update, see [2026-09-26 checks](VALIDATION-2026-09-26.md).

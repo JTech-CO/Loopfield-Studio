@@ -1,6 +1,8 @@
 # GLSL API v1
 
-WebGL 2 / GLSL ES 3.00 fragment shader이다. `#version`, 공통 uniform, 최종 main은 엔진이 넣는다. 사용자는 다음 둘 중 하나만 작성한다.
+**English** · [한국어](GLSL_API-KR.md) · [README](../README.md)
+
+The engine uses WebGL 2 / GLSL ES 3.00 fragment shaders and injects `#version`, shared uniforms and the final main function. Write one of these entry points:
 
 ```glsl
 vec3 pattern(vec2 p) { return palette(length(p)); }
@@ -13,36 +15,36 @@ void mainImage(out vec4 color, in vec2 fragCoord) {
 }
 ```
 
-`pattern`의 p는 화면 중앙이 0이며 위쪽 y가 양수인 종횡비 보정 좌표이다. 화면 세로 범위는 변환 전 -1~1이다. 선택 레이어의 회전·확대·이동이 적용된다. `mainImage`는 원시 픽셀 좌표를 받아 공통 시점 변환이 자동 적용되지 않는다. 필요하면 직접 적용해야 한다. vec4 alpha는 레이어 합성에 사용되지만 최종 MP4는 불투명이다.
+`pattern` receives aspect-corrected coordinates centered at zero with positive y upward. Before transforms, the vertical range is −1 to 1. Layer rotation, zoom and offset are applied. `mainImage` receives raw pixel coordinates and must apply view transforms itself. Its alpha participates in layer blending; the final MP4 is opaque.
 
-결과 색은 0~1로 제한된다. NaN/Infinity는 검정으로 처리한다. discard 픽셀은 해당 레이어의 투명 배경으로 남으며 이전 프레임을 참조하지 않는다. 사용자 코드가 긴 GPU 연산을 수행할 수 있으므로 무한 루프나 매우 큰 중첩 반복은 피한다.
+Colors are clamped to 0–1, non-finite results become black, and discarded pixels stay transparent within that layer. Frames do not read previous results. Avoid unbounded or very large nested GPU loops.
 
-## 공통 변수
+## Shared variables
 
-| 이름 | 타입 | 값 |
+| Name | Type | Value |
 |---|---|---|
-| uResolution | vec2 | 현재 렌더 타깃 픽셀 크기. 미리보기와 출력은 다르다. |
-| uLoop | float | 전체 위상 × 레이어 반복 횟수 + 레이어 시작 위상 |
+| uResolution | vec2 | Current render target size; preview and export differ |
+| uLoop | float | Global phase × layer cycles + layer phase |
 | uAngle | float | TAU × uLoop |
 | uCycle | vec2 | cos(uAngle), sin(uAngle) |
-| uTime | float | 전체 위상 × 영상 길이, 단위 초 |
-| uDuration | float | 영상 전체 길이, 단위 초 |
-| uFrame | int | 프레임 인덱스. 실제 출력에서는 0부터 순차 증가 |
-| uZoom | float | 확대값 0.25~64 |
-| uRotation | float | 레이어 회전 라디안 |
-| uOffset | vec2 | 패턴 좌표계 이동값 |
-| uSeed | float | 시드 0~999. 사용하는 코드에서만 영향을 준다. |
-| uHue | float | palette() 색상 진행 위치 |
-| uColorA/B/C | vec3 | 선택한 세 색의 RGB, 0~1 |
-| iTime / iResolution / iFrame | 매크로 | uTime / vec3(uResolution,1) / uFrame 호환 별칭 |
+| uTime | float | Global phase × duration, in seconds |
+| uDuration | float | Full video duration in seconds |
+| uFrame | int | Frame index; export starts at zero |
+| uZoom | float | Zoom, 0.25–64 |
+| uRotation | float | Layer rotation in radians |
+| uOffset | vec2 | Offset in pattern coordinates |
+| uSeed | float | Seed, 0–999; only affects code using it |
+| uHue | float | Palette progression offset |
+| uColorA/B/C | vec3 | Three selected RGB colors, 0–1 |
+| iTime / iResolution / iFrame | macros | uTime / vec3(uResolution,1) / uFrame aliases |
 
-`uTime`과 `uFrame`은 루프 경계에서 자동으로 같은 값이 되지 않는다. 엔진은 진짜 끝점을 검사하기 위해 위상 1을 0으로 강제로 감싸지 않는다. 주기 코드는 uCycle이나 sin/cos의 정수 회전 배수를 사용한다.
+`uTime` and `uFrame` do not automatically match at the loop boundary. Phase 1 is not wrapped to zero during inspection. Use `uCycle` or integer multiples of sine/cosine rotations for periodic code.
 
-## 함수
+## Functions
 
-`rotate(float)`은 mat2, `palette(float)`는 세 팔레트 색을 혼합한 vec3, `hash21(vec2)`는 의사난수 float, `noise2(vec2)`는 보간 값 노이즈, `fbm(vec2)`는 5옥타브 노이즈를 반환한다. `stroke(float distance, float halfWidth)`는 도함수를 사용한 부드러운 선 마스크이다. PI와 TAU 상수를 제공한다.
+`rotate(float)` returns mat2; `palette(float)` blends the three colors into vec3; `hash21(vec2)` returns a pseudorandom float; `noise2(vec2)` returns interpolated value noise; `fbm(vec2)` uses five octaves. `stroke(float distance, float halfWidth)` returns a derivative-smoothed line mask. PI and TAU are available.
 
-노이즈를 애니메이션하려면 좌표를 직선으로 계속 보내기보다 원을 따라 이동시킨다.
+Animate noise around a circle instead of translating indefinitely:
 
 ```glsl
 vec3 pattern(vec2 p) {
@@ -51,22 +53,22 @@ vec3 pattern(vec2 p) {
 }
 ```
 
-## 사용자 슬라이더
+## Custom sliders
 
 ```glsl
-// @slider uPetals 3 24 1 8 | 꽃잎 수
+// @slider uPetals 3 24 1 8 | Petals
 ```
 
-순서: 변수명 / 최소 / 최대 / 간격 / 기본 / | / 표시 이름. 레이어당 16개까지이며 **float uniform을 자동 선언**한다. 같은 uniform을 코드에 다시 선언하면 거부한다. 예약된 공통 변수, 중복 이름, gl_ 접두어, 이중 밑줄 이름을 쓰지 않는다. int가 필요하면 `int(uPetals + 0.5)`처럼 변환한다.
+Fields are variable, minimum, maximum, step, default, separator and display label. Up to 16 sliders per layer are supported. The engine declares a **float uniform** automatically. Do not redeclare it. Reserved variables, duplicate names, `gl_` prefixes and double underscores are rejected. Convert to integers with `int(uPetals + 0.5)` when needed.
 
-입력 UI는 범위를 제한하지만 모든 코드가 이 값을 정수처럼 처리한다는 보장은 없다. 주기 횟수에 쓰려면 round() 또는 정수 변환으로 고정한다. 코드는 레이어당 48,000자까지 저장한다.
+The UI clamps values but does not guarantee integer semantics in arbitrary code. Round cycle counts explicitly. Source is limited to 48,000 characters per layer.
 
-## 루프를 끊는 흔한 실수
+## Common loop mistakes
 
-`p.x += uTime`은 출발점과 도착점이 다르다. `p += uCycle * radius`는 같은 점으로 돌아온다. `sin(uAngle * 1.5)`는 한 주기 끝에서 일반적으로 연결되지 않는다. 정수 배수로 바꾸거나 전체 기간을 재설계한다. 프레임 인덱스에 따라 무작위 값을 바꾸면 결정론적 영상이어도 루프가 튈 수 있다.
+`p.x += uTime` ends at a different point; `p += uCycle * radius` returns to the start. `sin(uAngle * 1.5)` generally does not connect after one cycle. Use integer multiples or redesign the full period. Per-frame random changes may also create a boundary jump.
 
-## 호환 범위
+## Compatibility
 
-Shadertoy 스타일 mainImage와 세 기본 별칭만 일부 제공한다. iChannel0~3, Buffer A/B/C/D, 영상·오디오·이미지 텍스처, mouse/date/channel uniforms, 다중 패스 피드백은 지원하지 않는다. 임의 셰이더를 붙여 넣으면 전부 실행되는 가져오기 도구가 아니다.
+Only a Shadertoy-style `mainImage` and the three aliases above are provided. `iChannel0–3`, buffers A–D, media textures, mouse/date/channel uniforms and multi-pass feedback are unsupported.
 
-내장 프랙탈은 float 기반 시각화이다. deep-zoom perturbation, double-double 또는 임의 정밀도를 구현하지 않았다. 안티앨리어싱은 일부 선의 도함수 처리를 사용하며 전체 장면 초과 샘플링이나 시간적 안티앨리어싱을 제공하지 않는다.
+Built-in fractals use floats, without perturbation deep zoom, double-double or arbitrary precision. Some lines use derivative antialiasing; full-scene supersampling and temporal antialiasing are not provided.

@@ -1,3 +1,4 @@
+import { initLanguage, translate } from './i18n.js';
 import { PRESETS, PALETTES, createLayer, duplicateLayer, defaultProject, presetById } from './presets.js';
 import { readLocalProject, saveLocalProject, validateProject } from './project.js';
 import { Renderer, inspectLoop } from './renderer.js';
@@ -5,6 +6,7 @@ import { CodeEditor } from './editor.js';
 import { parseControls } from './glsl.js';
 import { testEncoder, exportVideo, renderPNG } from './exporter.js';
 import { MAX_LAYERS, MAX_SOURCE, clone, clamp, mod, dimensions, bitrateFor, safeName, downloadBlob, formatBytes, sleep } from './utils.js';
+const confirm = message => window.confirm(translate(message));
 const $=s=>document.querySelector(s);
 const node=(tag,className='',text='')=>{const n=document.createElement(tag);n.className=className;if(text)n.textContent=text;return n;};
 const icon=id=>{const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href',`./assets/icons.svg#${id}`);svg.append(use);return svg;};
@@ -52,7 +54,7 @@ function choosePreset(id){
 }
 function renderLibrary(){
   const search=$('#presetSearch').value.toLowerCase(),cat=$('#presetCategory').dataset.value;
-  const items=PRESETS.filter(p=>(cat==='all'||p.category===cat)&&`${p.name} ${p.ko} ${p.description}`.toLowerCase().includes(search));
+  const items=PRESETS.filter(p=>(cat==='all'||p.category===cat)&&`${p.name} ${p.ko} ${p.description} ${translate(p.description,'en')}`.toLowerCase().includes(search));
   const frag=document.createDocumentFragment();
   for(const p of items){
     const b=node('button',`preset-card${selected().preset===p.id&&!state.pendingAdd?' active':''}`);b.type='button';b.dataset.preset=p.id;b.title=p.description;
@@ -437,3 +439,4 @@ function start(){
   if(location.protocol==='file:')toast('프로젝트 미리보기와 MP4 출력을 위해 localhost 또는 GitHub Pages HTTPS로 실행하세요.','warning');
 }
 start();
+initLanguage();

@@ -1,0 +1,24 @@
+{
+  "passed": [
+    "Default Korean and WebGL boot",
+    "Immediate English and preserved draft",
+    "Project data unchanged",
+    "English accessible labels",
+    "Lossless Korean restoration",
+    "Language and draft survive reload",
+    "English preset names and controls",
+    "English documentation links",
+    "Shared logo and reduced-motion export indicator",
+    "Export result is localized",
+    "Native 1080p MP4 encode and video playback",
+    "No horizontal overflow at 1024px",
+    "Language button reachable at 1024px",
+    "No horizontal overflow at 768px",
+    "Language button reachable at 768px",
+    "No horizontal overflow at 390px",
+    "Language button reachable at 390px",
+    "No browser exceptions"
+  ],
+  "errors": [],
+  "export": "1920 × 1080 · 24fps · 2s · 48frames\n5.7 MB · avc1.640028\nUse the button below to save your MP4."
+}

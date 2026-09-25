@@ -1,118 +1,79 @@
 # Loopfield Studio
 
-**짧은 GLSL과 프리셋으로 만드는 고해상도 패턴 영상 루프 생성기**
+**English** · [한국어](README-KR.md) · [Open Studio](https://jtech-co.github.io/Loopfield-Studio/)
 
-![Loopfield Studio](docs/images/studio-desktop.webp)
+**Create high-resolution motion loops with GLSL and layered patterns.**
 
-Loopfield Studio는 **WebGL 2 + GLSL** 기반의 브라우저 그래픽 스튜디오입니다.
+![Loopfield Studio — Patterns. Code. Infinite motion.](assets/presets/og-repository.png)
 
-기하학적 패턴, 프랙탈, 유기적 패턴과 3D 스타일 셰이더를 조합해 반복되는 영상을 만들 수 있습니다.  
-서버, 로그인, API Key, 별도 렌더링 백엔드 없이 **GitHub Pages 같은 정적 호스팅만으로 실행**됩니다.
+Loopfield Studio is a browser-based **WebGL 2 + GLSL** graphics studio. Combine geometric patterns, fractals, organic motion and 3D-style shaders into looping videos. Start with presets and sliders, or write your own GLSL.
 
-일반 사용자는 프리셋과 슬라이더만으로 제작할 수 있으며, 필요하면 직접 GLSL 코드를 작성할 수 있습니다.
+It runs on static hosting such as GitHub Pages. No account, API key, upload service or rendering backend is required. Processing happens on your device.
 
-## 주요 기능
+## Features
 
-- WebGL 2 + GLSL 실시간 렌더링
-- 기본 셰이더 프리셋 32개
-- 망델브로, 줄리아 등 프랙탈 패턴
-- 기하학, 유기적 패턴, 3D 곡면
-- 최대 4개 레이어 합성
-- GLSL 코드 편집 및 실시간 미리보기
-- 블룸, 노출, 대비, 비네트, 색수차
-- 루프 경계 검사
-- PNG 이미지 출력
-- H.264 MP4 영상 출력
-- 프로젝트 JSON 가져오기 / 내보내기
-- 반응형 데스크톱·태블릿·모바일 UI
+- 32 shader presets, including Mandelbrot and Julia fractals
+- Up to four layers with blend modes and per-layer palettes
+- GLSL editing, custom sliders and live preview
+- Bloom, exposure, contrast, vignette and chromatic aberration
+- Sample-based loop boundary inspection
+- PNG export and silent H.264 MP4 export
+- Project JSON import/export, including unapplied code drafts
+- Responsive desktop, tablet and mobile layout
+- Instant KR/EN switching with a saved preference; Korean is the default
 
-## 출력 해상도
+## Output
 
-| 설정 | 해상도 |
+| Format | Landscape resolution |
 |---|---:|
 | Full HD | 1920 × 1080 |
 | DCI 2K | 2048 × 1080 |
 | QHD | 2560 × 1440 |
 | UHD 4K | 3840 × 2160 |
 
-영상은 24 / 30 / 60 FPS와 2~60초 길이를 지원합니다.
+Choose 24, 30 or 60 fps and a duration of 2–60 seconds. Preview quality is independent of export resolution. DCI 2K is landscape only; the other sizes also support portrait and square output.
 
-미리보기 해상도와 실제 출력 해상도는 서로 분리되어 있습니다.
-
-## GLSL 예제
+## A little GLSL
 
 ```glsl
 vec3 pattern(vec2 p) {
   float radius = length(p);
-  float wave =
-    0.5 + 0.5 * cos(radius * 12.0 + uCycle.x * 2.0);
-
-  return palette(
-    radius * 0.3 + uCycle.y * 0.2
-  ) * wave;
+  float wave = 0.5 + 0.5 * cos(radius * 12.0 + uCycle.x * 2.0);
+  return palette(radius * 0.3 + uCycle.y * 0.2) * wave;
 }
-````
+```
 
-`uCycle`은 시작점과 끝점이 연결되는 루프 애니메이션을 만들기 위한 시간 좌표입니다.
+`uCycle` traces a circle to help connect the beginning and end of an animation. See the [GLSL API](docs/GLSL_API.md).
 
-자세한 내용은 [GLSL API](docs/GLSL_API.md)를 참고하세요.
+## Run locally
 
-## 로컬 실행
-
-별도의 빌드 과정이나 `npm install`은 필요하지 않습니다.
+No build step or `npm install` is required.
 
 ```sh
 python -m http.server 8000
 ```
 
-브라우저에서 다음 주소를 엽니다.
+Open [localhost:8000](http://localhost:8000). Opening `index.html` through `file://` is unsupported.
 
-```text
-http://localhost:8000
-```
+## Hosting and browsers
 
-`index.html`을 `file://` 방식으로 직접 실행하는 것은 지원하지 않습니다.
+The included workflow can deploy the repository root to GitHub Pages. Select **Settings → Pages → Source → GitHub Actions**. See [deployment](docs/DEPLOYMENT.md).
 
-## GitHub Pages 배포
+MP4 requires WebGL 2, WebCodecs `VideoEncoder`, an available H.264 encoder, and HTTPS or localhost. Desktop Chrome and Edge are the primary targets. 2K/4K and 60 fps support depends on the browser, GPU, OS and encoder. Unsupported output is reported without silently reducing resolution or disguising WebM as MP4.
 
-저장소 루트에 `index.html`이 위치하도록 프로젝트를 업로드한 뒤:
+## Documentation
 
-```text
-Settings
-→ Pages
-→ Source
-→ GitHub Actions
-```
+- [User guide](docs/USER_GUIDE.md)
+- [GLSL API](docs/GLSL_API.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Deployment and social previews](docs/DEPLOYMENT.md)
+- [Validation report](docs/TEST_REPORT.md)
+- [Development tests](tests/README.md)
+- [Examples](examples/README.md)
+- [Changelog](CHANGELOG.md)
 
-포함된 GitHub Actions 워크플로를 사용해 배포할 수 있습니다.
+Each document links to its Korean counterpart. Social images live in `assets/presets/`: `og-site.png` is connected to site metadata; `og-repository.png` can be uploaded in GitHub repository settings as the social preview.
 
-자세한 내용은 [배포 안내](docs/DEPLOYMENT.md)를 참고하세요.
+## License
 
-## 브라우저 지원
-
-MP4 출력에는 다음 기능이 필요합니다.
-
-* WebGL 2
-* WebCodecs `VideoEncoder`
-* H.264 인코더
-* HTTPS 또는 localhost
-
-데스크톱 Chrome / Edge 계열을 우선 대상으로 합니다.
-
-2K·4K 또는 60 FPS 인코딩 가능 여부는 브라우저, GPU, 운영체제와 H.264 인코더 지원에 따라 달라질 수 있습니다.
-
-지원되지 않는 환경에서 해상도를 임의로 낮추거나 WebM 파일을 MP4로 위장하지 않습니다.
-
-## 문서
-
-* [사용 안내](docs/USER_GUIDE_KO.md)
-* [GLSL API](docs/GLSL_API.md)
-* [아키텍처](docs/ARCHITECTURE.md)
-* [배포 안내](docs/DEPLOYMENT.md)
-* [검증 보고서](docs/TEST_REPORT.md)
-
-## 라이선스
-
-MIT License
-
-자세한 내용은 [LICENSE](LICENSE)를 참고하세요.
+[MIT](LICENSE).

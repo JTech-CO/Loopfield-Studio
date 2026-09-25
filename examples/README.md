@@ -1,7 +1,9 @@
-# 예제 열기
+# Opening examples
 
-Studio 상단 열기에서 .loopfield.json 파일을 선택한다. 기존 작업을 보관하려면 먼저 프로젝트 저장을 누른다.
+**English** · [한국어](README-KR.md) · [Project README](../README.md)
 
-01은 프리즘과 궤도 링, 02는 망델브로와 파동 간섭, 03은 자이로이드와 궤도 링을 합성한다. 기본 출력은 1080p/30fps/8초이며 기기에 맞춰 변경한다.
+Use Open in the Studio top bar to choose a `.loopfield.json` file. Save your current project first if you want to keep it.
 
-.glsl 파일은 내용을 선택 레이어의 코드 편집기에 붙여 넣고 적용한다. 03-mainImage-alpha는 레이어 투명도를 사용하는 예제이며 MP4 자체를 투명하게 만드는 기능이 아니다.
+Example 01 combines Prism bloom and Orbit rings; 02 combines Mandelbrot and Wave interference; 03 combines Gyroid and Orbit rings. Defaults are 1080p, 30 fps and 8 seconds; adjust for your device.
+
+Paste a `.glsl` file into the selected layer's code editor and apply it. `03-mainImage-alpha` demonstrates layer transparency; the exported MP4 remains opaque.
