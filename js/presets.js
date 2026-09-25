@@ -10,7 +10,7 @@ export const PALETTES = [
  { name:'모노', colors:['#f7f4ed','#8a929d','#dbe6ed'] }
 ];
 export const PRESETS = [
- { id:'prism', name:'Prism bloom', ko:'프리즘 블룸', category:'geometry', description:'겹겹의 빛으로 만드는 회전 대칭 패턴', palette:0,
+ { id:'prism', name:'Prism Bloom', ko:'프리즘 블룸', category:'geometry', description:'겹겹의 빛으로 만드는 회전 대칭 패턴', palette:0,
  code:`// @slider uPetals 3 16 1 7 | 대칭 수
 // @slider uBands 3 18 1 9 | 빛의 겹
 // @slider uTwist 0 3 0.05 1.2 | 꼬임
@@ -194,7 +194,7 @@ export function createLayer(id='prism') {
     params:Object.fromEntries(parseControls(p.code).map(c=>[c.name,c.value])) };
 }
 export function defaultProject() {
-  return { format:'loopfield-project', version:1, appVersion:'1.1.0', name:'무한의 궤도',
+  return { format:'loopfield-project', version:1, appVersion:'1.1.0', name:'Prism Bloom', nameMode:'auto', namePreset:'prism',
     layers:[createLayer('prism')],
     effects:{ glow:.35, exposure:1.15, contrast:1.08, vignette:.25, aberration:0 },
     background:'#080b12',

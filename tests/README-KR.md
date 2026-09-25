@@ -50,3 +50,5 @@ python -X utf8 tests/qa_language.py
 ## 네이티브 코덱
 
 실제 HTTPS/localhost의 tests/browser.html에서 선택 해상도와 24/30/60fps로 2초 영상을 인코딩하고 MP4를 다시 디코딩합니다. 브라우저·OS·설정과 함께 JSON 보고서를 저장하세요. 긴 영상과 OS 파일 선택기는 Studio에서 별도로 검사합니다.
+
+localhost:8000에서 `python -X utf8 tests/qa_titles.py`로 EN·Prism 기본값, 자동 제목, 직접 입력 후 유지, 새로고침, 새 프로젝트와 JSON 불러오기를 검사합니다.

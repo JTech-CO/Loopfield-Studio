@@ -1,4 +1,4 @@
-import { initLanguage, translate } from './i18n.js';
+import { initLanguage, translate, getLanguage } from './i18n.js';
 import { PRESETS, PALETTES, createLayer, duplicateLayer, defaultProject, presetById } from './presets.js';
 import { readLocalProject, saveLocalProject, validateProject } from './project.js';
 import { Renderer, inspectLoop } from './renderer.js';
@@ -42,6 +42,14 @@ function setSelected(id){
   state.selected=id;state.pendingAdd=false;$('.library-intro').textContent='하나를 골라, 나만의 루프로.';
   renderLayers();renderInspector();renderLibrary();loadEditor();
 }
+function syncAutoName(){
+  if(project.nameMode!=='auto')return;
+  const preset=presetById(project.namePreset);
+  const name=getLanguage()==='en'?preset.name:preset.ko;
+  if(project.name!==name){project.name=name;changed();}
+  $('#projectName').value=project.name;
+}
+document.addEventListener('languagechange',syncAutoName);
 function choosePreset(id){
   if(state.busy)return;
   const current=selected();
@@ -49,7 +57,7 @@ function choosePreset(id){
   const layer=createLayer(id);let next;
   if(state.pendingAdd){if(project.layers.length>=MAX_LAYERS)return;next=[...project.layers,layer];layer.blend='screen';}
   else{Object.assign(layer,{id:current.id,opacity:current.opacity,blend:current.blend,enabled:current.enabled});next=project.layers.map(l=>l.id===current.id?layer:l);}
-  try{renderer?.sync({...project,layers:next});project.layers=next;setSelected(layer.id);changed();closeLibrary();}
+  try{renderer?.sync({...project,layers:next});project.layers=next;if(project.nameMode==='auto'){project.namePreset=id;syncAutoName();}setSelected(layer.id);changed();closeLibrary();}
   catch(e){toast(`패턴을 적용하지 못했습니다. ${e.message}`,'error');}
 }
 function renderLibrary(){
@@ -241,7 +249,7 @@ function saveProject(){
   toast('프로젝트 JSON에 레이어, 설정, GLSL을 저장했습니다.');
 }
 function replaceProject(next){
-  renderer?.sync(next);project=next;state.selected=next.layers[0].id;state.phase=0;state.codec=null;
+  renderer?.sync(next);project=next;syncAutoName();state.selected=next.layers[0].id;state.phase=0;state.codec=null;
   $('#projectName').value=project.name;renderLibrary();renderLayers();renderInspector();renderOutput();loadEditor();fitPreview();changed();
 }
 async function computeLoop(){
@@ -312,7 +320,7 @@ async function renderVideo(){
 }
 
 // Project controls.
-$('#projectName').addEventListener('input',e=>{project.name=e.target.value;changed();});
+$('#projectName').addEventListener('input',e=>{project.name=e.target.value;project.nameMode='custom';changed();});
 $('#saveProject').addEventListener('click',saveProject);
 $('#openProject').addEventListener('click',()=>$('#projectFile').click());
 $('#projectFile').addEventListener('change',async e=>{

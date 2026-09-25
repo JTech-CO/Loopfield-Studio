@@ -8,7 +8,7 @@ The host serves static HTML, CSS, JavaScript and image assets. The browser edits
 
 `app.js` owns UI state and events; `editor.js` handles text editing/highlighting; `project.js` validates and stores projects. `presets.js` and `presets-extra.js` contain 32 original shaders. `glsl.js` supplies the shared API and compiler wrapper. `renderer.js` manages GPU targets and composition; `avc.js` negotiates AVC profiles/levels; `exporter.js` handles probing, frames, WebCodecs and cancellation; `mp4.js` writes single-track AVC ISO BMFF. `utils.js` contains pure helpers.
 
-`i18n.js` and `locales/en.js` localize presentation text and accessible attributes. Original DOM values are retained for reversible switching; a scoped MutationObserver handles dynamic UI updates. Editor source and input values are excluded. Confirmations are translated at their call site. Language uses a separate `loopfield.language.v1` storage key and does not modify project JSON. No external translation service is used.
+`i18n.js` and `locales/en.js` localize presentation text and accessible attributes. Original DOM values are retained for reversible switching; a scoped MutationObserver handles dynamic UI updates. Editor source and input values are excluded. Confirmations are translated at their call site. Language uses a separate `loopfield.language.v1` storage key and updates only automatic project titles when the language changes. No external translation service is used.
 
 ## Layout
 
@@ -55,3 +55,5 @@ CSP allows self resources, required blob media/images and dynamic UI styles. No 
 ## Future extensions
 
 Possible work includes worker-based rendering, job queues, antialiasing choices, periodic parameter keyframes and high-precision fractals. Audio and additional codecs require corresponding muxer changes.
+
+Project `nameMode` distinguishes automatic and custom titles; `namePreset` records the last chosen preset for automatic naming. Validation preserves both. Legacy projects without `nameMode` use custom mode to protect saved names.

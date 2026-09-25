@@ -4,13 +4,13 @@
 
 ## Your first video
 
-Choose Prism bloom, then adjust Symmetry, Light bands and a palette on the right. Drag the preview to pan the selected layer and scroll to zoom. Use **Reset view** to restore its position and zoom.
+Choose Prism Bloom, then adjust Symmetry, Light bands and a palette on the right. Drag the preview to pan the selected layer and scroll to zoom. Use **Reset view** to restore its position and zoom.
 
 Start with 1080p, 30 fps, 8 seconds and High quality. **Export video** opens settings; **MP4 Render** starts rendering. Test your device's encoder before exporting. Preview quality controls editing responsiveness and does not reduce MP4 resolution.
 
 After completion, download the MP4. With direct disk saving enabled, select a destination at the start and the file is finalized there. An incomplete render is not offered as a completed video. Enable repeat in your video player to play the single exported cycle continuously.
 
-Use **EN / KR** in the top bar to switch language immediately. The preference is stored in this browser. Switching preserves your project, shader draft, timeline and export settings. Project names and source code are data and are not rewritten.
+Use **EN / KR** in the top bar to switch language immediately. The preference is stored in this browser. Switching preserves your project, shader draft, timeline and export settings. New projects start in English with Prism Bloom unless you have a saved language preference. The automatic title follows the chosen pattern and language. Editing the title once makes it custom, preserving it across pattern changes, language changes, reloads and JSON import/export. Starting a new project resets automatic naming. Existing projects without title-mode metadata keep their saved names. Shader source is never translated.
 
 ## Resolution and preview quality
 

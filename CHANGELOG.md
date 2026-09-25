@@ -4,6 +4,8 @@
 
 ## Unreleased / 2026-09-26
 
+- Default new sessions to English and Prism Bloom. Follow selected pattern names until the title is manually edited; preserve title mode in project JSON.
+
 - Add a persistent KR/EN toggle, including dynamic status messages and accessible labels, without changing project data or shader drafts.
 - Separate English and Korean documentation with reciprocal links.
 - Refine Korean export, frame-rate and layer-order wording.

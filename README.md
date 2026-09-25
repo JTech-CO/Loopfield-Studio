@@ -20,7 +20,9 @@ It runs on static hosting such as GitHub Pages. No account, API key, upload serv
 - PNG export and silent H.264 MP4 export
 - Project JSON import/export, including unapplied code drafts
 - Responsive desktop, tablet and mobile layout
-- Instant KR/EN switching with a saved preference; Korean is the default
+- Instant KR/EN switching with a saved preference; English is the default
+
+New projects start with **Prism Bloom**. The loop title follows the selected pattern until you edit the title yourself; a custom title is then preserved across pattern changes and saved projects. Existing saved work and language preferences are restored.
 
 ## Output
 

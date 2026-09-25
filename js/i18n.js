@@ -8,8 +8,8 @@ const catalog = new Map(entries.trim().split('\n').map(line => {
 for (const preset of PRESETS) catalog.set(preset.ko, preset.name);
 const escape = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const phrases = new RegExp([...catalog.keys()].sort((a,b) => b.length-a.length).map(escape).join('|'), 'g');
-let language = 'ko';
-try { if (typeof window !== 'undefined' && localStorage.getItem('loopfield.language.v1') === 'en') language = 'en'; } catch {}
+let language = 'en';
+try { if (typeof window !== 'undefined' && localStorage.getItem('loopfield.language.v1') === 'ko') language = 'ko'; } catch {}
 export const getLanguage = () => language;
 export function translate(value, locale = language) {
   return locale === 'en' ? String(value).replace(phrases, match => catalog.get(match)) : String(value);
@@ -64,6 +64,7 @@ export function initLanguage() {
     observer.disconnect();
     localize(document.body);
     updateMetadata();
+    document.dispatchEvent(new Event('languagechange'));
     observe();
   }
   document.querySelector('#languageToggle').addEventListener('click', () => {

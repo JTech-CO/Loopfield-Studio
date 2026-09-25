@@ -45,6 +45,20 @@ test('project JSON round-trip, duplicates, clamping and enum fallbacks',()=>{
 test('project rejects unsupported schema and layer/source overflow',()=>{
   assert.throws(()=>validateProject({}));let p=defaultProject();p.layers=[];assert.throws(()=>validateProject(p));p=defaultProject();p.layers=Array.from({length:5},()=>createLayer('prism'));assert.throws(()=>validateProject(p));p=defaultProject();p.layers[0].source='x'.repeat(MAX_SOURCE+1);assert.throws(()=>validateProject(p));
 });
+
+test('title mode survives JSON validation while legacy project names remain manual',()=>{
+  const fresh=defaultProject();
+  assert.equal(fresh.layers[0].preset,'prism');
+  assert.equal(fresh.name,'Prism Bloom');
+  assert.equal(validateProject(fresh).nameMode,'auto');
+  const manual={...fresh,name:'My custom loop',nameMode:'custom'};
+  assert.equal(validateProject(manual).nameMode,'custom');
+  const legacy={...manual};delete legacy.nameMode;delete legacy.namePreset;
+  assert.equal(validateProject(legacy).name,'My custom loop');
+  assert.equal(validateProject(legacy).nameMode,'custom');
+  const auto={...fresh,name:'Julia orbit',namePreset:'julia'};
+  assert.equal(validateProject(JSON.parse(JSON.stringify(auto))).namePreset,'julia');
+});
 test('endpoint comparison ignores alpha, does not hide real RGB discontinuity',()=>{
   assert.equal(endpointMetrics(new Uint8Array([0,0,0,255]),new Uint8Array([0,0,0,0])).match,true);
   assert.equal(endpointMetrics(new Uint8Array([0,0,0,255]),new Uint8Array([255,0,0,255])).match,false);

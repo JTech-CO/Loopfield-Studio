@@ -45,3 +45,5 @@ Open `tests/browser.html` on the actual HTTPS/localhost deployment. It encodes 2
 ## Language and branding regression
 
 Serve the repository on localhost:8000 with its original CSP, then run `python -X utf8 tests/qa_language.py`. Checks cover language switching/reload, project and draft preservation, accessible labels, documentation links, responsive widths, reduced motion and export localization. When a native encoder is available, it also downloads and plays a 1080p MP4. Artifacts go to `test-artifacts/language/`.
+
+Run `python -X utf8 tests/qa_titles.py` against localhost:8000 to verify EN/Prism defaults, automatic naming, manual overrides, reload, new-project reset and JSON import.

@@ -17,6 +17,8 @@ Loopfield Studio는 **WebGL 2 + GLSL** 기반의 브라우저 그래픽 스튜�
 
 [사이트 열기](https://jtech-co.github.io/Loopfield-Studio/)
 
+저장된 설정이 없는 첫 접속은 **EN · Prism Bloom**으로 시작합니다. 제목은 선택한 패턴을 따라 바뀌지만 직접 입력한 뒤에는 유지됩니다. 기존 작업과 언어 설정은 복원합니다.
+
 ## 주요 기능
 
 - WebGL 2 + GLSL 실시간 렌더링
