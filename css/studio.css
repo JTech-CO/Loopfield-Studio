@@ -104,3 +104,12 @@ body.code-layout #libraryToggle,body.code-layout #inspectorToggle{display:inline
 @media(prefers-reduced-motion:reduce){.export-orbit>img,.export-orbit>.orbit-tracer{animation:none}}
 @media(max-width:1250px){html[lang=en] .header-actions #saveProject span{display:none}}
 @media(max-width:760px){.header-actions .language-toggle{display:inline-flex;min-width:34px;padding:5px}}
+
+/* Equal side columns keep the repository link centered in the footer. */
+.statusbar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);height:auto;column-gap:16px}
+.footer-status{display:flex;align-items:center;flex-wrap:wrap;gap:2px 24px;min-width:0}
+.statusbar .footer-version{width:auto;margin-left:0;text-align:right;justify-self:end}
+.footer-github{color:inherit;font-family:var(--sans);font-size:12px;font-weight:600;text-decoration:none;padding:2px 4px}
+.footer-github:hover,.footer-github:focus-visible{color:#B7F0B1}
+.footer-github:focus-visible{outline:1px solid currentColor;outline-offset:3px;border-radius:2px}
+@media(max-width:760px){.statusbar{column-gap:10px}.footer-status{flex-direction:column;align-items:flex-start;overflow-wrap:anywhere}}
