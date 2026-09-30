@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { dimensions, frameTiming, endpointMetrics, bitrateFor, MAX_SOURCE, safeName } from '../js/utils.js';
 import { parseControls, buildFragment } from '../js/glsl.js';
 import { PRESETS, defaultProject, createLayer, duplicateLayer } from '../js/presets.js';
-import { validateProject } from '../js/project.js';
+import { readLocalProject, validateProject } from '../js/project.js';
 
 test('all 32 presets use the injected GLSL API and valid control ranges',()=>{
   assert.equal(PRESETS.length,32);
@@ -44,6 +44,21 @@ test('project JSON round-trip, duplicates, clamping and enum fallbacks',()=>{
 });
 test('project rejects unsupported schema and layer/source overflow',()=>{
   assert.throws(()=>validateProject({}));let p=defaultProject();p.layers=[];assert.throws(()=>validateProject(p));p=defaultProject();p.layers=Array.from({length:5},()=>createLayer('prism'));assert.throws(()=>validateProject(p));p=defaultProject();p.layers[0].source='x'.repeat(MAX_SOURCE+1);assert.throws(()=>validateProject(p));
+});
+
+test('reload shows every locally saved layer without changing imported JSON visibility',()=>{
+  const saved=defaultProject();saved.layers.push(createLayer('julia'));
+  for(const layer of saved.layers)layer.enabled=false;
+  const previous=globalThis.localStorage;
+  globalThis.localStorage={getItem:key=>key==='loopfield.project.v1'?JSON.stringify(saved):null};
+  try{
+    assert.deepEqual(readLocalProject().layers.map(layer=>layer.enabled),[true,true]);
+    assert.deepEqual(validateProject(saved).layers.map(layer=>layer.enabled),[false,false]);
+    assert.deepEqual(saved.layers.map(layer=>layer.enabled),[false,false]);
+  }finally{
+    if(previous===undefined)delete globalThis.localStorage;
+    else globalThis.localStorage=previous;
+  }
 });
 
 test('title mode survives JSON validation while legacy project names remain manual',()=>{

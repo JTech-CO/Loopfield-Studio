@@ -34,7 +34,13 @@ export function validateProject(raw) {
   };
 }
 export function readLocalProject() {
-  try { const raw=localStorage.getItem(KEY);return raw?validateProject(JSON.parse(raw)):null; }
+  try {
+    const raw=localStorage.getItem(KEY);
+    if(!raw)return null;
+    const project=validateProject(JSON.parse(raw));
+    for(const layer of project.layers)layer.enabled=true;
+    return project;
+  }
   catch { return null; }
 }
 export function saveLocalProject(project) { localStorage.setItem(KEY,JSON.stringify(project)); }

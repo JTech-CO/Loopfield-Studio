@@ -22,6 +22,8 @@ The 540p/720p/1080p/1440p/2160p preview settings affect editing GPU load only. Y
 
 Click **Add layer**, then choose a pattern to add a new layer. Selecting a preset normally replaces the current layer. Up to four layers are supported. Duplicate, delete, reorder or toggle visibility with the eye button. Earlier layers are composited first onto the background.
 
+Hidden layers stay hidden while you work. Reloading the page shows every autosaved layer again.
+
 New layers use Screen blending. Normal blending covers underlying layers, Multiply darkens them, and Difference compares their colors. Try opacity 0.15–0.4 to avoid overwhelming the composition.
 
 Palettes and shape controls belong to each layer. Bloom, exposure, contrast, vignette and chromatic aberration affect the full composition. Bloom is an SDR light effect, not HDR output. Seed only matters when a shader uses `uSeed`.
