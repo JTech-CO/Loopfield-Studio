@@ -105,7 +105,9 @@ function renderInspector(){
   $('#blendMode').value=l.blend;$('#layerCycles').value=l.cycles;
   $('#opacityControl').replaceChildren();control($('#opacityControl'),{name:'불투명도',min:0,max:1,step:.01,value:l.opacity,onChange:v=>{l.opacity=v;renderLayers();}});
   $('#parameterControls').replaceChildren();
-  try{for(const c of parseControls(l.source))control($('#parameterControls'),{name:c.label,min:c.min,max:c.max,step:c.step,value:l.params[c.name]??c.value,onChange:v=>l.params[c.name]=v});}catch{}
+  let shapeControls=[];
+  try{shapeControls=parseControls(l.source);for(const c of shapeControls)control($('#parameterControls'),{name:c.label,min:c.min,max:c.max,step:c.step,value:l.params[c.name]??c.value,onChange:v=>{l.params[c.name]=v;$('#resetParameters').disabled=!shapeControls.some(item=>(l.params[item.name]??item.value)!==item.value);}});}catch{}
+  $('#resetParameters').disabled=!shapeControls.some(c=>(l.params[c.name]??c.value)!==c.value);
   $('#transformControls').replaceChildren();
   for(const c of [{name:'확대',key:'zoom',min:.25,max:8,step:.01},{name:'회전',key:'rotation',min:-180,max:180,step:1},{name:'시작 위상',key:'phase',min:0,max:1,step:.01},{name:'시드',key:'seed',min:0,max:999,step:1}]){
     control($('#transformControls'),{...c,max:c.key==='zoom'?64:c.max,value:l[c.key],onChange:v=>l[c.key]=v});
@@ -373,6 +375,10 @@ $('#compileCode').addEventListener('click',compileCode);$('#resetCode').addEvent
 $('#playPause').addEventListener('click',togglePlay);$('#rewind').addEventListener('click',()=>{state.phase=0;state.dirty=true;updateTimeline();});
 $('#scrub').addEventListener('input',e=>{state.phase=Math.min(.999999,Number(e.target.value)/10000);state.playing=false;state.dirty=true;renderPlayButton();updateTimeline();});
 $('#previewQuality').addEventListener('change',e=>{state.previewSize=Number(e.target.value);fitPreview();});
+$('#resetParameters').addEventListener('click',()=>{
+  const l=selected();l.params=Object.fromEntries(parseControls(l.source).map(c=>[c.name,c.value]));
+  renderInspector();changed();
+});
 $('#resetView').addEventListener('click',()=>{Object.assign(selected(),{zoom:1,rotation:0,offset:[0,0]});renderInspector();changed();});
 $('#fullscreen').addEventListener('click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $('#previewShell').requestFullscreen();}catch{toast('이 브라우저에서는 전체 화면 요청이 허용되지 않았습니다.','warning');}});
 $('#snapshot').addEventListener('click',()=>{

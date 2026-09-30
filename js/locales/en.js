@@ -86,6 +86,8 @@ MP4 다운로드|Download MP4
 차이|Difference
 반복 횟수|Cycles
 형태|Shape
+변경값 초기화|Reset values
+선택한 레이어의 형태 파라미터를 기본값으로|Reset the selected layer's shape parameters to defaults
 확대 · 회전 · 시작 위상 · 시드|Zoom · Rotation · Phase · Seed
 레이어별 팔레트|Per-layer palette
 첫 번째 색상|First color

@@ -28,6 +28,8 @@ New layers use Screen blending. Normal blending covers underlying layers, Multip
 
 Palettes and shape controls belong to each layer. Bloom, exposure, contrast, vignette and chromatic aberration affect the full composition. Bloom is an SDR light effect, not HDR output. Seed only matters when a shader uses `uSeed`.
 
+Use **Reset values** beside Shape to restore the selected layer's shape sliders to their GLSL defaults. It leaves colors, layer transforms and finishing effects unchanged.
+
 ## Mandelbrot and Julia
 
 Mandelbrot starts with z=0 and uses a different c for each pixel while iterating z²+c. Julia uses each pixel as the initial z with a shared c. Interior points are dark; escaping points are colored using iteration information.
