@@ -99,6 +99,10 @@ function control(parent,{name,min,max,step,value,onChange}){
   head.append(label,num);outer.append(head,range);parent.append(outer);return outer;
 }
 control.index=0;
+function updateParameterResetButton(controls,layer){
+  const button=$('#resetParameters');
+  if(button)button.disabled=!controls.some(c=>(layer.params[c.name]??c.value)!==c.value);
+}
 function renderInspector(){
   const l=selected(),p=presetById(l.preset);
   $('#selectedLayerName').textContent=l.name;$('#selectedDescription').textContent=l.preset==='custom'?'직접 작성한 GLSL 패턴':p.description;
@@ -106,8 +110,8 @@ function renderInspector(){
   $('#opacityControl').replaceChildren();control($('#opacityControl'),{name:'불투명도',min:0,max:1,step:.01,value:l.opacity,onChange:v=>{l.opacity=v;renderLayers();}});
   $('#parameterControls').replaceChildren();
   let shapeControls=[];
-  try{shapeControls=parseControls(l.source);for(const c of shapeControls)control($('#parameterControls'),{name:c.label,min:c.min,max:c.max,step:c.step,value:l.params[c.name]??c.value,onChange:v=>{l.params[c.name]=v;$('#resetParameters').disabled=!shapeControls.some(item=>(l.params[item.name]??item.value)!==item.value);}});}catch{}
-  $('#resetParameters').disabled=!shapeControls.some(c=>(l.params[c.name]??c.value)!==c.value);
+  try{shapeControls=parseControls(l.source);for(const c of shapeControls)control($('#parameterControls'),{name:c.label,min:c.min,max:c.max,step:c.step,value:l.params[c.name]??c.value,onChange:v=>{l.params[c.name]=v;updateParameterResetButton(shapeControls,l);}});}catch{}
+  updateParameterResetButton(shapeControls,l);
   $('#transformControls').replaceChildren();
   for(const c of [{name:'확대',key:'zoom',min:.25,max:8,step:.01},{name:'회전',key:'rotation',min:-180,max:180,step:1},{name:'시작 위상',key:'phase',min:0,max:1,step:.01},{name:'시드',key:'seed',min:0,max:999,step:1}]){
     control($('#transformControls'),{...c,max:c.key==='zoom'?64:c.max,value:l[c.key],onChange:v=>l[c.key]=v});
@@ -375,7 +379,7 @@ $('#compileCode').addEventListener('click',compileCode);$('#resetCode').addEvent
 $('#playPause').addEventListener('click',togglePlay);$('#rewind').addEventListener('click',()=>{state.phase=0;state.dirty=true;updateTimeline();});
 $('#scrub').addEventListener('input',e=>{state.phase=Math.min(.999999,Number(e.target.value)/10000);state.playing=false;state.dirty=true;renderPlayButton();updateTimeline();});
 $('#previewQuality').addEventListener('change',e=>{state.previewSize=Number(e.target.value);fitPreview();});
-$('#resetParameters').addEventListener('click',()=>{
+$('#resetParameters')?.addEventListener('click',()=>{
   const l=selected();l.params=Object.fromEntries(parseControls(l.source).map(c=>[c.name,c.value]));
   renderInspector();changed();
 });

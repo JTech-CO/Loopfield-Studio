@@ -1,9 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { dimensions, frameTiming, endpointMetrics, bitrateFor, MAX_SOURCE, safeName } from '../js/utils.js';
 import { parseControls, buildFragment } from '../js/glsl.js';
 import { PRESETS, defaultProject, createLayer, duplicateLayer } from '../js/presets.js';
 import { readLocalProject, validateProject } from '../js/project.js';
+
+test('the app shell includes the parameter reset control required by Design mode',()=>{
+  const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/<button\b[^>]*\bid="resetParameters"/);
+});
 
 test('all 32 presets use the injected GLSL API and valid control ranges',()=>{
   assert.equal(PRESETS.length,32);
