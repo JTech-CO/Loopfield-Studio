@@ -186,10 +186,11 @@ vec3 pattern(vec2 p) {
 }` }
 ];
 export const presetById = id => PRESETS.find(p => p.id === id) || PRESETS[0];
+export const defaultTransform = id => ({zoom:presetById(id).zoom||1,rotation:0,phase:0,seed:3});
 export function createLayer(id='prism') {
   const p=presetById(id);
   return { id:uid(), preset:p.id, name:p.ko, source:p.code, draft:null, enabled:true, opacity:1, blend:'normal',
-    zoom:p.zoom||1, rotation:0, offset:[0,0], cycles:1, phase:0, seed:3,
+    ...defaultTransform(p.id), offset:[0,0], cycles:1,
     colors:[...PALETTES[p.palette].colors], hue:0,
     params:Object.fromEntries(parseControls(p.code).map(c=>[c.name,c.value])) };
 }

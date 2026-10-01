@@ -1,5 +1,5 @@
 import { initLanguage, translate, getLanguage } from './i18n.js';
-import { PRESETS, PALETTES, createLayer, duplicateLayer, defaultProject, presetById } from './presets.js';
+import { PRESETS, PALETTES, createLayer, duplicateLayer, defaultProject, presetById, defaultTransform } from './presets.js';
 import { readLocalProject, saveLocalProject, validateProject } from './project.js';
 import { Renderer, inspectLoop } from './renderer.js';
 import { CodeEditor } from './editor.js';
@@ -101,7 +101,8 @@ function control(parent,{name,min,max,step,value,onChange}){
 control.index=0;
 function updateParameterResetButton(controls,layer){
   const button=$('#resetParameters');
-  if(button)button.disabled=!controls.some(c=>(layer.params[c.name]??c.value)!==c.value);
+  if(button)button.disabled=!controls.some(c=>(layer.params[c.name]??c.value)!==c.value)
+    && !Object.entries(defaultTransform(layer.preset)).some(([key,value])=>layer[key]!==value);
 }
 function renderInspector(){
   const l=selected(),p=presetById(l.preset);
@@ -114,7 +115,7 @@ function renderInspector(){
   updateParameterResetButton(shapeControls,l);
   $('#transformControls').replaceChildren();
   for(const c of [{name:'확대',key:'zoom',min:.25,max:8,step:.01},{name:'회전',key:'rotation',min:-180,max:180,step:1},{name:'시작 위상',key:'phase',min:0,max:1,step:.01},{name:'시드',key:'seed',min:0,max:999,step:1}]){
-    control($('#transformControls'),{...c,max:c.key==='zoom'?64:c.max,value:l[c.key],onChange:v=>l[c.key]=v});
+    control($('#transformControls'),{...c,max:c.key==='zoom'?64:c.max,value:l[c.key],onChange:v=>{l[c.key]=v;updateParameterResetButton(shapeControls,l);}});
   }
   renderPalettes();
   ['colorA','colorB','colorC'].forEach((id,i)=>$('#'+id).value=l.colors[i]);$('#backgroundColor').value=project.background;
@@ -381,6 +382,7 @@ $('#scrub').addEventListener('input',e=>{state.phase=Math.min(.999999,Number(e.t
 $('#previewQuality').addEventListener('change',e=>{state.previewSize=Number(e.target.value);fitPreview();});
 $('#resetParameters')?.addEventListener('click',()=>{
   const l=selected();l.params=Object.fromEntries(parseControls(l.source).map(c=>[c.name,c.value]));
+  Object.assign(l,defaultTransform(l.preset));
   renderInspector();changed();
 });
 $('#resetView').addEventListener('click',()=>{Object.assign(selected(),{zoom:1,rotation:0,offset:[0,0]});renderInspector();changed();});
