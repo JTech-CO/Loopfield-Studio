@@ -6,6 +6,10 @@ import { parseControls, buildFragment } from '../js/glsl.js';
 import { PRESETS, defaultProject, createLayer, duplicateLayer } from '../js/presets.js';
 import { readLocalProject, validateProject } from '../js/project.js';
 
+test('branch-based Pages publishing retains the production custom domain',()=>{
+  assert.equal(readFileSync(new URL('../CNAME',import.meta.url),'utf8').trim(),'loopfield.studio');
+});
+
 test('the app shell includes the parameter reset control required by Design mode',()=>{
   const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
   assert.match(html,/<button\b[^>]*\bid="resetParameters"/);

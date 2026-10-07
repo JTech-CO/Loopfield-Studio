@@ -20,7 +20,11 @@ This update is committed locally only. No remote push, Pages deployment or GitHu
 
 ## Custom domains
 
-No arbitrary CNAME is included. Configure a domain you own in Pages, then follow GitHub's official DNS guide. Apex and subdomain records differ; consult the current guide rather than copying hard-coded IPs. Enable Enforce HTTPS when the certificate is ready. DNS propagation and certificate issuance are outside app code.
+The production custom domain is `loopfield.studio`. The root `CNAME` file must contain that hostname alone. Keep it tracked when publishing from **main / (root)**: removing it can clear the domain mapping even if DNS and the application deployment are healthy. A regression test protects this file.
+
+In **Settings → Pages → Custom domain**, set `loopfield.studio`. Follow GitHub's official DNS guide for apex and subdomain records, and enable **Enforce HTTPS** when the certificate is ready. If Source is **GitHub Actions**, GitHub ignores `CNAME` files for domain mapping; the repository's Custom domain setting is still required. Select a single publishing method instead of running branch publication and the custom workflow together. DNS propagation and certificate issuance are outside app code.
+
+On 2026-10-08, the custom domain returned GitHub's 404 while the default repository URL returned HTTP 200 and both deployment runs had succeeded. Pages was configured for branch publication with `cname: null`; the earlier 2026-10-02 CNAME commit was absent from the new branch history. The local fix restores the domain file. It must be pushed and published, or the Custom domain setting restored, before the public hostname can recover. Before replacing local/remote history, incorporate remote domain-setting commits; avoid force-pushing over them.
 
 Browser storage is origin-specific. Export project JSON at the old origin and import it at the new domain; autosaved projects and language preferences do not migrate automatically.
 
