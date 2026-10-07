@@ -28,6 +28,7 @@ Python의 playwright, pillow 및 Chromium을 준비합니다.
 
 ```sh
 python tests/qa_graphics.py
+python -X utf8 tests/qa_library.py
 python tests/qa_ui.py
 python tests/qa_export_flow.py
 ```
@@ -35,6 +36,8 @@ python tests/qa_export_flow.py
 LOOPFIELD_BROWSER로 실행 파일을 지정할 수 있습니다. LOOPFIELD_HEADED=1은 창 모드이며 Linux에서는 디스플레이/Xvfb가 필요합니다. WebGL 초기화 실패는 컴파일 성공으로 간주하지 않습니다.
 
 기존 검사는 about:blank 문서에 로컬 파일을 라우팅합니다. 테스트 문서만 CSP를 생략하고 SVG를 인라인 처리합니다. 배포 CSP나 Pages 동작을 검증하는 방법은 아닙니다. 결과는 test-artifacts/browser/에 저장하며 그래픽 검사는 프리셋 썸네일, UI 검사는 docs/images/를 다시 생성합니다. 출력 흐름 검사는 실제 WebGL과 인코더 모의 객체를 사용합니다.
+
+`qa_library.py`는 64개 전체 셰이더와 추가 32개의 개별·전체 조절값 양 끝을 검사합니다. 기존 이미지를 보존하고 새 썸네일만 생성하며, `library-64.json`과 `library-expansion.png`에 결과를 저장합니다. 테서랙트의 한국어·영어 검색과 조절 항목도 확인합니다.
 
 ## 언어·브랜드 회귀검사
 

@@ -12,7 +12,8 @@ It runs on static hosting such as GitHub Pages. No account, API key, upload serv
 
 ## Features
 
-- 32 shader presets, including Mandelbrot and Julia fractals
+- 64 distinct shader presets, including Mandelbrot, Julia, Mandelbulb, Menger sponge and rotating 4D polytopes
+- Parameter-driven tesseract, 16-cell and 24-cell projections, knots and surface meshes
 - Up to four layers with blend modes and per-layer palettes
 - GLSL editing, custom sliders and live preview
 - Bloom, exposure, contrast, vignette and chromatic aberration
@@ -66,6 +67,7 @@ MP4 requires WebGL 2, WebCodecs `VideoEncoder`, an available H.264 encoder, and 
 ## Documentation
 
 - [User guide](docs/USER_GUIDE.md)
+- [All 64 patterns and their controls](docs/PATTERNS.md)
 - [GLSL API](docs/GLSL_API.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Deployment and social previews](docs/DEPLOYMENT.md)

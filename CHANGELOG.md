@@ -2,7 +2,10 @@
 
 **English** · [한국어](CHANGELOG-KR.md)
 
-## Unreleased / 2026-09-26
+## Unreleased / 2026-10-07
+
+- Expand the library from 32 to 64 distinct procedural presets with parameter controls, English/Korean descriptions and rendered thumbnails. Add 4D tesseract/16-cell/24-cell projections, recursive 2D and 3D fractals, rolling-circle paths, gears, folded faces, knots and surface meshes.
+- Share bounded geometry helpers inside editable GLSL sources; validate real WebGL output, control extrema and sampled loop boundaries with `tests/qa_library.py`.
 
 - Default new sessions to English and Prism Bloom. Follow selected pattern names until the title is manually edited; preserve title mode in project JSON.
 

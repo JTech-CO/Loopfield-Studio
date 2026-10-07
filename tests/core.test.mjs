@@ -11,9 +11,12 @@ test('the app shell includes the parameter reset control required by Design mode
   assert.match(html,/<button\b[^>]*\bid="resetParameters"/);
 });
 
-test('all 32 presets use the injected GLSL API and valid control ranges',()=>{
-  assert.equal(PRESETS.length,32);
-  assert.equal(new Set(PRESETS.map(p=>p.id)).size,32);
+test('all 64 presets use distinct sources, names and valid control ranges',()=>{
+  assert.equal(PRESETS.length,64);
+  assert.equal(new Set(PRESETS.map(p=>p.id)).size,64);
+  assert.equal(new Set(PRESETS.map(p=>p.name)).size,64);
+  assert.equal(new Set(PRESETS.map(p=>p.ko)).size,64);
+  assert.equal(new Set(PRESETS.map(p=>p.code.trim())).size,64);
   for(const p of PRESETS){const l=createLayer(p.id),c=buildFragment(l.source);assert.match(c.code,/#version 300 es/);assert.match(c.code,/#line 1/);assert.ok(c.controls.length<=16);for(const x of c.controls)assert.ok(l.params[x.name]>=x.min&&l.params[x.name]<=x.max);}
 });
 test('1080p / QHD / DCI 2K / UHD dimensions and portrait / square',()=>{

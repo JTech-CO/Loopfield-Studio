@@ -22,8 +22,9 @@ Loopfield Studio는 **WebGL 2 + GLSL** 기반의 브라우저 그래픽 스튜�
 ## 주요 기능
 
 - WebGL 2 + GLSL 실시간 렌더링
-- 기본 셰이더 프리셋 32개
-- 망델브로, 줄리아 등 프랙탈 패턴
+- 서로 다른 셰이더 프리셋 64개
+- 망델브로, 줄리아, 만델벌브, 멩거 스펀지 등 프랙탈 패턴
+- 테서랙트·16셀·24셀의 4차원 투영, 매듭과 곡면 메시의 파라미터 조절
 - 기하학, 유기적 패턴, 3D 곡면
 - 최대 4개 레이어 합성
 - GLSL 코드 편집 및 실시간 미리보기
@@ -114,6 +115,7 @@ MP4 출력에는 다음 기능이 필요합니다.
 ## 문서
 
 * [사용 안내](docs/USER_GUIDE-KR.md)
+* [64개 패턴과 조절 항목](docs/PATTERNS-KR.md)
 * [GLSL API](docs/GLSL_API-KR.md)
 * [아키텍처](docs/ARCHITECTURE-KR.md)
 * [배포 안내](docs/DEPLOYMENT-KR.md)

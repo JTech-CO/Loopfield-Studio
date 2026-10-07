@@ -8,7 +8,7 @@
 
 ## 모듈
 
-app.js는 화면 상태와 이벤트, editor.js는 텍스트 편집·강조, project.js는 저장 및 검증을 담당한다. presets.js와 presets-extra.js는 32개 자체 GLSL 소스와 초기값, glsl.js는 공통 API와 컴파일 wrapper를 제공한다. renderer.js는 GPU 타깃과 합성, avc.js는 AVC 프로필/레벨 후보와 지원 조회, exporter.js는 첫 프레임 검증·프레임 생성·WebCodecs·취소, mp4.js는 AVC 한 트랙용 ISO BMFF writer이다. utils.js에 순수 계산과 저장 헬퍼를 모았다.
+app.js는 화면 상태와 이벤트, editor.js는 텍스트 편집·강조, project.js는 저장 및 검증을 담당한다. presets.js, presets-extra.js, presets-expanded.js는 64개 자체 GLSL 소스와 초기값, glsl.js는 공통 API와 컴파일 wrapper를 제공한다. renderer.js는 GPU 타깃과 합성, avc.js는 AVC 프로필/레벨 후보와 지원 조회, exporter.js는 첫 프레임 검증·프레임 생성·WebCodecs·취소, mp4.js는 AVC 한 트랙용 ISO BMFF writer이다. utils.js에 순수 계산과 저장 헬퍼를 모았다.
 
 ## 화면 구조
 

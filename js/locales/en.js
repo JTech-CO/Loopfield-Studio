@@ -428,4 +428,84 @@ MP4 다운로드|Download MP4
 예상보다 많은 프레임이 인코딩되었습니다.|More frames encoded than expected.
 프레임 수 불일치: |Frame count mismatch:\u0020
 오프셋 크기가 예상과 다릅니다.|Unexpected offset size.
+켤레 복소수의 제곱 반복으로 나타나는 세 갈래 프랙탈|A three-armed fractal from squared conjugate complex iteration
+이전 복소수 상태를 다시 더해 깃털처럼 갈라지는 프랙탈|Feather-like branches from a complex recurrence with memory
+복소 유리함수의 제곱 반복이 만드는 탈출 영역과 끌개|Escape regions and attractors from a squared complex rational map
+두 로지스틱 계수를 번갈아 적용해 안정성과 혼돈을 시각화|Stability and chaos from alternating logistic coefficients
+정사각형의 중앙을 재귀적으로 비워 만드는 아홉 칸 격자|A nine-cell square grid with recursively removed centers
+세로와 가로 십자 가지를 다섯 부분으로 되풀이하는 프랙탈|A five-part recursive cross with horizontal and vertical branches
+중앙 행과 열을 제거해 네 모서리에 남기는 자기유사 점 집합|Self-similar corner dust formed by removing middle rows and columns
+격자 접힘과 원 반전을 반복해 빈틈을 채우는 원형 프랙탈|Circle packing from repeated grid folds and circle inversions
+띠 접힘과 복소 반전이 만들어 내는 반복적인 원형 경계|Repeating circular boundaries from strip folds and complex inversion
+두 복소 축소 변환을 재귀적으로 이어 붙인 C 모양 곡선|A C-shaped curve built from two recursive complex contractions
+큰 원의 바깥을 구르는 작은 원이 그리는 닫힌 궤적|A closed curve traced by a circle rolling outside another circle
+원 안쪽을 구르는 원의 펜 위치로 만드는 스피로그래프|A spirograph traced by a pen on an internally rolling circle
+극좌표 슈퍼포뮬러의 지수를 바꿔 꽃과 별 사이를 오가는 윤곽|Flower and star outlines controlled by polar superformula exponents
+황금각과 제곱근 반지름으로 씨앗을 배치한 식물형 나선|A botanical seed spiral using the golden angle and square-root radius
+진동판의 두 정수 모드가 만드는 정상파 마디 무늬|Standing-wave nodal patterns from two integer plate modes
+복소 뫼비우스 변환으로 휘어지는 직교 격자와 체크무늬|Orthogonal grids and checkers bent by a complex Mobius transform
+깊이가 번갈아 바뀌는 여러 리본을 엮은 주기적 땋기|Periodic braids of ribbons with alternating depth
+원 위의 점을 정수 배수로 연결해 만드는 현의 포락선|Chord envelopes connecting circle points by integer multiples
+톱니와 살이 맞물려 반대 방향으로 도는 세 개의 기어|Three toothed and spoked gears rotating in opposite directions
+삼각형 면의 높낮이를 번갈아 접는 입체 방사형 부채|A radial 3D fan of alternating folded triangular faces
+16개 꼭짓점과 32개 모서리를 가진 4차원 초입방체의 회전 투영|A rotating projection of a 4D hypercube with 16 vertices and 32 edges
+네 축 위의 8개 꼭짓점을 24개 모서리로 잇는 4차원 교차 다면체|A 4D cross-polytope joining eight axis vertices with 24 edges
+두 축에만 좌표를 둔 24개 꼭짓점과 96개 모서리의 4차원 격자|A 4D lattice with 24 two-axis vertices and 96 edges
+황금비 좌표로 만든 12개 꼭짓점과 30개 모서리의 정이십면체|An icosahedron with 12 golden-ratio vertices and 30 edges
+고리의 두 방향을 정수 횟수로 감아 만든 닫힌 3D 매듭|A closed 3D knot with integer windings in two toroidal directions
+한 바퀴에서 반 바퀴 뒤집히는 단면을 가진 한쪽 면의 띠|A one-sided strip with a half-twist around its circumference
+다항식 매개변수로 만든 자기교차 안장형 최소곡면|A self-intersecting saddle-like minimal surface with polynomial parameters
+음의 곡률을 가진 곡면을 축 방향으로 비틀어 올린 나선|A negatively curved surface twisted upward along an axis
+정육면체에서 십자 통로를 반복해 비워 만드는 입체 프랙탈|A 3D fractal carved by recursive cross-shaped cube tunnels
+구면 좌표의 거듭제곱 반복으로 솟아나는 입체 프랙탈|A sculptural 3D fractal from spherical power iteration
+팔면체의 평면과 구형 내부 공간을 조합한 회전 결정|A rotating octahedral crystal with a spherical interior cavity
+경도와 위도의 정수 파동으로 표면이 물결치는 구형 조각|A spherical shell rippling with integer longitude and latitude waves
+기억 계수|Memory coefficient
+복소 상수|Complex constant
+로지스틱 중심|Logistic center
+계수 탐색 폭|Coefficient span
+흔들림 각도|Rocking angle
+반전 배율|Inversion scale
+거울 간격|Mirror spacing
+반전 높이|Inversion height
+첨점 수|Cusp count
+구름 반지름 비|Rolling radius ratio
+펜 거리|Pen offset
+윤곽 조임|Outline pinch
+씨앗 수|Seed count
+씨앗 반경|Seed radius
+가로 진동 모드|Horizontal mode
+세로 진동 모드|Vertical mode
+모드 혼합|Mode mix
+변환 강도|Transform strength
+격자 두께|Grid width
+리본 가닥 수|Ribbon strands
+땋기 밀도|Braid density
+리본 너비|Ribbon width
+연결 점 수|Chord points
+연결 배수|Chord multiplier
+톱니 수|Gear teeth
+톱니 깊이|Tooth depth
+기어 살 수|Gear spokes
+접힘 면 수|Fold panels
+접힘 높이|Fold height
+펼침 반경|Fan radius
+4차원 투영 거리|4D projection distance
+4차원 기울기|4D tilt
+모델 크기|Model size
+모서리 두께|Edge width
+고리 감김 수|Ring windings
+단면 감김 수|Tube windings
+매듭 굴곡|Knot relief
+메시 분할 수|Mesh divisions
+띠 너비|Band width
+곡면 범위|Surface extent
+나선 회전 수|Spiral turns
+나선 상승 폭|Spiral pitch
+프랙탈 차수|Fractal power
+내부 공동 반경|Cavity radius
+모서리 둥글기|Edge rounding
+경도 굴곡 수|Longitude lobes
+위도 굴곡 수|Latitude bands
+표면 굴곡|Surface relief
 `;
