@@ -29,6 +29,7 @@ Python의 playwright, pillow 및 Chromium을 준비합니다.
 ```sh
 python tests/qa_graphics.py
 python -X utf8 tests/qa_library.py
+python -X utf8 tests/qa_library_ui.py
 python tests/qa_ui.py
 python tests/qa_export_flow.py
 ```
@@ -37,7 +38,7 @@ LOOPFIELD_BROWSER로 실행 파일을 지정할 수 있습니다. LOOPFIELD_HEAD
 
 기존 검사는 about:blank 문서에 로컬 파일을 라우팅합니다. 테스트 문서만 CSP를 생략하고 SVG를 인라인 처리합니다. 배포 CSP나 Pages 동작을 검증하는 방법은 아닙니다. 결과는 test-artifacts/browser/에 저장하며 그래픽 검사는 프리셋 썸네일, UI 검사는 docs/images/를 다시 생성합니다. 출력 흐름 검사는 실제 WebGL과 인코더 모의 객체를 사용합니다.
 
-`qa_library.py`는 64개 전체 셰이더와 추가 32개의 개별·전체 조절값 양 끝을 검사합니다. 기존 이미지를 보존하고 새 썸네일만 생성하며, `library-64.json`과 `library-expansion.png`에 결과를 저장합니다. 테서랙트의 한국어·영어 검색과 조절 항목도 확인합니다.
+`qa_library.py`는 80개 전체 셰이더와 새로 추가한 16개의 개별·전체 조절값 양 끝을 검사합니다. 기존 이미지를 보존하고 새 썸네일만 생성하며, `library-80.json`과 `library-expansion-80.png`에 결과를 저장합니다. 테서랙트의 한국어·영어 검색과 조절 항목도 확인합니다.
 
 ## 언어·브랜드 회귀검사
 
@@ -55,3 +56,5 @@ python -X utf8 tests/qa_language.py
 실제 HTTPS/localhost의 tests/browser.html에서 선택 해상도와 24/30/60fps로 2초 영상을 인코딩하고 MP4를 다시 디코딩합니다. 브라우저·OS·설정과 함께 JSON 보고서를 저장하세요. 긴 영상과 OS 파일 선택기는 Studio에서 별도로 검사합니다.
 
 localhost:8000에서 `python -X utf8 tests/qa_titles.py`로 EN·Prism 기본값, 자동 제목, 직접 입력 후 유지, 새로고침, 새 프로젝트와 JSON 불러오기를 검사합니다.
+
+`qa_library_ui.py`는 임시 로컬 서버에서 원본 HTML/CSP로 접속합니다. 80개 목록, 새 패턴 16개의 선택·조절값 초기화, EN/KR 이름·검색·자동 제목 및 수동 제목 유지를 검사합니다.

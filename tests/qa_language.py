@@ -21,7 +21,7 @@ async def main():
             results.append(name)
             print('PASS', name, flush=True)
         await page.goto('http://127.0.0.1:8000')
-        await page.wait_for_function("() => document.querySelectorAll('.preset-card').length === 64")
+        await page.wait_for_function("() => document.querySelectorAll('.preset-card').length === 80")
         await check('Default English and WebGL boot', await page.locator('html').get_attribute('lang') == 'en' and await page.locator('#canvasError').is_hidden())
         await page.locator('#languageToggle').click()
         await page.locator('#projectName').fill('내 프로젝트 — Keep my name')

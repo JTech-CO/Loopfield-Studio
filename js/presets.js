@@ -2,6 +2,9 @@ import { uid, clone } from './utils.js';
 import { parseControls } from './glsl.js';
 import { EXTRA_PRESETS } from './presets-extra.js';
 import { EXPANDED_PRESETS } from './presets-expanded.js';
+import { CURVE_PRESETS } from './presets-curves.js';
+import { PLANAR_PRESETS } from './presets-planar.js';
+import { SPATIAL_PRESETS } from './presets-spatial.js';
 export const PALETTES = [
  { name:'오로라', colors:['#65fbd5','#ac76ff','#ffb86c'] },
  { name:'일몰', colors:['#ff543e','#ffc879','#a63cff'] },
@@ -179,6 +182,9 @@ vec3 pattern(vec2 p) {
 }` },
  ...EXTRA_PRESETS,
  ...EXPANDED_PRESETS,
+ ...CURVE_PRESETS,
+ ...PLANAR_PRESETS,
+ ...SPATIAL_PRESETS,
  { id:'starter', name:'Your first loop', ko:'나의 첫 루프', category:'code', description:'단 5줄의 함수로 시작하는 나만의 루프', palette:0,
  code:`// @slider uDensity 2 20 1 8 | 원의 밀도
 vec3 pattern(vec2 p) {

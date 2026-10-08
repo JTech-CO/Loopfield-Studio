@@ -1,7 +1,10 @@
 import { entries } from './locales/en.js';
+import { entries as curveEntries } from './locales/curves-en.js';
+import { entries as planarEntries } from './locales/planar-en.js';
+import { entries as spatialEntries } from './locales/spatial-en.js';
 import { PRESETS } from './presets.js';
 
-const catalog = new Map(entries.trim().split('\n').map(line => {
+const catalog = new Map([entries, curveEntries, planarEntries, spatialEntries].join('\n').trim().split('\n').filter(Boolean).map(line => {
   const separator = line.indexOf('|');
   return [line.slice(0, separator), line.slice(separator + 1)];
 }));
