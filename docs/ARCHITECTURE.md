@@ -52,8 +52,4 @@ Custom GLSL can consume excessive GPU time; this is not a hostile-shader sandbox
 
 CSP allows self resources, required blob media/images and dynamic UI styles. No external scripts, tracking, SharedArrayBuffer or multithreaded WASM are required, so COOP/COEP are unnecessary.
 
-## Future extensions
-
-Possible work includes worker-based rendering, job queues, antialiasing choices, periodic parameter keyframes and high-precision fractals. Audio and additional codecs require corresponding muxer changes.
-
 Project `nameMode` distinguishes automatic and custom titles; `namePreset` records the last chosen preset for automatic naming. Validation preserves both. Legacy projects without `nameMode` use custom mode to protect saved names.

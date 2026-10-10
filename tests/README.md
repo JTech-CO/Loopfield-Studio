@@ -1,4 +1,4 @@
-# Development tests
+# Maintenance tests
 
 **English** · [한국어](README-KR.md)
 
@@ -27,18 +27,17 @@ Fourteen outputs are decoded and compared frame-for-frame with the reference AVC
 Install the Python packages `playwright` and `pillow`, and either a Chromium browser or Playwright's Chromium. Then:
 
 ```sh
-python tests/qa_graphics.py
 python -X utf8 tests/qa_library.py
 python -X utf8 tests/qa_library_ui.py
 python tests/qa_ui.py
 python tests/qa_export_flow.py
 ```
 
-`LOOPFIELD_BROWSER` optionally selects an executable. `LOOPFIELD_HEADED=1` uses headed mode; on Linux this also needs a display/Xvfb. Some Chromium environments disable WebGL in headless mode; a WebGL boot failure is not a shader compile success. The v1.1.0 production report used Chromium + ANGLE SwiftShader in headed Xvfb.
+`LOOPFIELD_BROWSER` optionally selects an executable. `LOOPFIELD_HEADED=1` uses headed mode; on Linux this also needs a display/Xvfb. Some Chromium environments disable WebGL in headless mode; a WebGL boot failure is not a shader compile success.
 
 Files are served to an about:blank test document through local Playwright route fulfillment. Only the test document's CSP is omitted and SVG symbols are inlined to avoid the opaque-origin SVG restriction. Do not count this as Pages deployment/CSP verification. The app's shipped HTML/CSP is not changed.
 
-Results go to `test-artifacts/browser/`. Graphics tests regenerate the local preset thumbnails; UI tests regenerate `docs/images/` screenshots. `qa_library.py` checks all 80 shaders, tests the 16 newest presets at individual control extrema and combined extrema, writes only those 16 thumbnails, and produces `library-80.json` and `library-expansion-80.png`. It also checks English/Korean tesseract search and controls. `qa_library_ui.py` starts a temporary loopback server with the original HTML/CSP and checks all 16 new selections, parameter resets, translated names/search, automatic titles and a manual title override. No fonts are bundled. The export-flow test replaces only the encoder/frame API while using real WebGL readback; it does not verify native H.264.
+Results and UI screenshots go to `test-artifacts/browser/`. `qa_library.py` checks all 80 shaders, tests the 16 newest presets at individual control extrema and combined extrema, writes only those 16 thumbnails, and produces `library-80.json` and `library-expansion-80.png`. It also checks English/Korean tesseract search and controls. `qa_library_ui.py` starts a temporary loopback server with the original HTML/CSP and checks all 16 new selections, parameter resets, translated names/search, automatic titles and a manual title override. No fonts are bundled. The export-flow test replaces only the encoder/frame API while using real WebGL readback; it does not verify native H.264.
 
 ## Native browser codec test
 

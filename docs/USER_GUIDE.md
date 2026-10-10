@@ -28,7 +28,7 @@ New layers use Screen blending. Normal blending covers underlying layers, Multip
 
 Palettes and shape controls belong to each layer. Bloom, exposure, contrast, vignette and chromatic aberration affect the full composition. Bloom is an SDR light effect, not HDR output. Seed only matters when a shader uses `uSeed`.
 
-Use **Reset values** beside Shape to restore the selected layer's shape sliders to their GLSL defaults. It leaves colors, layer transforms and finishing effects unchanged.
+Use **Reset values** beside Shape to restore the selected layer's shape sliders, zoom, rotation, starting phase and seed to their defaults. Colors, layer position and finishing effects stay unchanged.
 
 ## Mandelbrot and Julia
 

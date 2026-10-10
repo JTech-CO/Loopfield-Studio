@@ -1,7 +1,7 @@
 import asyncio,pathlib,json,base64,io,re,struct
 from PIL import Image
 from playwright.async_api import async_playwright
-from browser_harness import mount,ROOT,OUT,ORIGIN,launch
+from browser_harness import mount,OUT,ORIGIN,launch
 records=[]
 def check(name,condition,detail=None):
  records.append({'name':name,'pass':bool(condition),'detail':detail});print('PASS' if condition else 'FAIL',name,detail or '',flush=True)
@@ -11,7 +11,7 @@ async def boxes(page):
 async def shot(page,name):
  await page.wait_for_function("document.querySelector('#toast').hidden",timeout=10000)
  await page.screenshot(path=str(OUT/f'{name}.png'),full_page=True)
- im=Image.open(str(OUT/f'{name}.png'));im.save(ROOT/f'docs/images/{name}.webp','WEBP',quality=88)
+ im=Image.open(str(OUT/f'{name}.png'));im.save(OUT/f'{name}.webp','WEBP',quality=88)
 async def main():
  async with async_playwright() as pw:
   browser=await launch(pw)

@@ -71,8 +71,7 @@ MP4 requires WebGL 2, WebCodecs `VideoEncoder`, an available H.264 encoder, and 
 - [GLSL API](docs/GLSL_API.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Deployment and social previews](docs/DEPLOYMENT.md)
-- [Validation report](docs/TEST_REPORT.md)
-- [Development tests](tests/README.md)
+- [Maintenance tests](tests/README.md)
 - [Examples](examples/README.md)
 - [Changelog](CHANGELOG.md)
 

@@ -26,7 +26,7 @@ jobs:
       - name: Prepare static artifact
         run: |
           mkdir -p _site/tests
-          cp index.html CNAME .nojekyll *.md LICENSE _site/
+          cp index.html CNAME .nojekyll README.md README-KR.md CHANGELOG.md CHANGELOG-KR.md LICENSE _site/
           cp -R css js assets docs examples _site/
           cp tests/browser.html tests/browser.css tests/browser.js tests/*.md _site/tests/
       - name: Upload static artifact

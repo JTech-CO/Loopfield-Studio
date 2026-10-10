@@ -119,7 +119,9 @@ MP4 출력에는 다음 기능이 필요합니다.
 * [GLSL API](docs/GLSL_API-KR.md)
 * [아키텍처](docs/ARCHITECTURE-KR.md)
 * [배포 안내](docs/DEPLOYMENT-KR.md)
-* [검증 보고서](docs/TEST_REPORT-KR.md)
+* [유지보수 검사](tests/README-KR.md)
+* [예제](examples/README-KR.md)
+* [변경 이력](CHANGELOG-KR.md)
 
 ## 라이선스
 

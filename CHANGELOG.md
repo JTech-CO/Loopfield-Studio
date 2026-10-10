@@ -2,6 +2,16 @@
 
 **English** · [한국어](CHANGELOG-KR.md)
 
+## Maintenance / 2026-10-10
+
+- Remove historical development reports, unused screenshots, initial upgrade notes and the obsolete guide alias.
+- Keep current regression checks and the device-output diagnostic; remove the duplicate graphics script. Store generated UI screenshots under ignored test artifacts.
+- Repair documentation references and package only named root documents, preserving `CNAME` while excluding maintenance instructions.
+
+## Pattern library / 2026-10-08
+
+- Expand from 64 to 80 patterns with five fractal curves, six planar models and five spatial models, including Hopf fibers and the 5-cell. Add controls, rendered thumbnails and English/Korean descriptions.
+
 ## Unreleased / 2026-10-07
 
 - Expand the library from 32 to 64 distinct procedural presets with parameter controls, English/Korean descriptions and rendered thumbnails. Add 4D tesseract/16-cell/24-cell projections, recursive 2D and 3D fractals, rolling-circle paths, gears, folded faces, knots and surface meshes.
@@ -25,7 +35,7 @@
 - Dark HTML category listbox with selection, focus, keyboard support and counts. Explicit colors for other selects/options.
 - Twenty additional GLSL presets: spiral, Truchet, hex pulse, polar grid, rose, Lissajous, concentric grid, quasicrystal, Burning Ship, Multibrot, Newton, Sierpinski, aurora, caustics, metaballs, dunes, plasma, torus, superellipsoid and Schwarz P; 32 total.
 - Preserve v1.0.0 JSON and source; missing encoder preference becomes auto.
-- Separate actual test evidence from unverified native behavior in the [report](docs/TEST_REPORT.md).
+- Add reproducible regression checks for rendering and media export.
 
 ## 1.0.0 / 2026-09-22
 

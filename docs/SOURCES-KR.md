@@ -12,4 +12,4 @@
 
 6. [Chromium H.264 level limits](https://chromium.googlesource.com/chromium/src/+/refs/tags/143.0.7499.183/media/parsers/h264_level_limits.h): level별 매크로블록 수·처리율·비트레이트 제약.
 
-실제 검증 증거는 외부 문서가 아니라 TEST_REPORT-KR.md와 validation/의 실행 결과이다. 브라우저와 OS의 코덱 제공 상태는 문서만으로 확정할 수 없어 앱과 테스트 페이지에서 동적으로 검사한다.
+렌더링·UI·미디어 검사를 재현하는 방법은 [유지보수 검사](../tests/README-KR.md)를 참고한다. 생성된 보고서는 Git에서 제외하는 `test-artifacts/`에 저장한다. 브라우저와 OS의 코덱 제공 상태는 문서만으로 확정할 수 없어 앱과 테스트 페이지에서 동적으로 검사한다.
